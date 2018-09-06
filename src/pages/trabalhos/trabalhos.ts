@@ -1,19 +1,30 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-/*
-  Generated class for the ApiUfsmProvider provider.
+/**
+ * Generated class for the TrabalhosPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
 
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
-@Injectable()
-export class ApiUfsmProvider {
+@IonicPage()
+@Component({
+  selector: 'page-trabalhos',
+  templateUrl: 'trabalhos.html',
+})
+export class TrabalhosPage {
 
-  private trabalhos: Array<Trabalho>;
+  trabalhos: Array<Trabalho>;
 
-  constructor(public http: HttpClient) {
-    console.log('Hello ApiUfsmProvider Provider');
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad TrabalhosPage');
+  }
+
+  ngOnInit(){
     this.trabalhos = [
       {
         "id": 25424,
@@ -72,10 +83,6 @@ export class ApiUfsmProvider {
     ];
   }
 
-  public getTrabalhos(){
-    return this.trabalhos;
-  }
-
 }
 
 interface Trabalho{
@@ -84,13 +91,4 @@ interface Trabalho{
   apresentador: string,
   apresentacao: {data: string, predio: string, sala:string},
   perguntas: Array<{discursiva: boolean, id: number, nome: string, respostas: string}>
-}
-
-interface JsonResponse{
-  id: number,
-  error: boolean,
-  codigo: number,
-  mensagem: string,
-  trabalhos: Array<Trabalho>,
-  errorEntity: boolean
 }

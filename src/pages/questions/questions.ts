@@ -15,6 +15,7 @@ import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
 })
 export class QuestionsPage {
 
+  questions: Array<Pergunta>
   rangeValue: number;
   radioValue: string;
   @ViewChild(Slides) slides: Slides;
@@ -22,6 +23,7 @@ export class QuestionsPage {
   slidesLength: number;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+    //this.questions = this.navParams.data.questions;
   }
 
   ionViewDidLoad() {
@@ -29,7 +31,7 @@ export class QuestionsPage {
   }
 
   ngOnInit(){
-    this.slidesIndex = 0;
+    this.slidesIndex = 1;
     this.slidesLength = 3;
   }
 
@@ -45,4 +47,11 @@ export class QuestionsPage {
     this.slidesIndex = this.slides.getActiveIndex() + 1;
   }
 
+}
+
+interface Pergunta{
+  discursiva: boolean, 
+  id: number, 
+  nome: string, 
+  respostas: string
 }
