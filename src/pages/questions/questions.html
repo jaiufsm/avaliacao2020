@@ -18,32 +18,14 @@
 
 <ion-content padding>
   <ion-slides (ionSlideDidChange)="slideChanged()">
-    <ion-slide>
-      <h2>Preencha o campo abaixo com a palavra 'APROVADO' e, caso deseje, faça um comentário sobre a qualidade do trabalho. Caso o trabalho necessite revisão ou não seja aprovado, use o campo para escrever sua justificativa.</h2>
-      <ion-textarea placeholder="Resposta"></ion-textarea>
-    </ion-slide>
-    <ion-slide>
-      <h2>Na sua opinião, o trabalho é bom?</h2>
-      <ion-range [(ngModel)]="rangeValue" min="0" max="5" pin="true" snaps="true"></ion-range>
-    </ion-slide>
-    <ion-slide>
-      <h2>Pergunta 3</h2>
-      <ion-list radio-group [(ngModel)]="radioValue">
-        <ion-item>
-          <ion-label>Resposta 1</ion-label>
-          <ion-radio value="resposta1"></ion-radio>
-        </ion-item>
-        <ion-item>
-          <ion-label>Resposta 2</ion-label>
-          <ion-radio value="resposta2"></ion-radio>
-        </ion-item>
-        <ion-item>
-          <ion-label>Resposta 3</ion-label>
-          <ion-radio value="resposta3"></ion-radio>
-        </ion-item>
-        <ion-item>
-          <ion-label>Resposta 4</ion-label>
-          <ion-radio value="resposta4"></ion-radio>
+    <ion-slide *ngFor="let question of questions">
+      <h2>{{question.nome}}</h2>
+      <ion-textarea *ngIf="question.tipo == 1" placeholder="Resposta"></ion-textarea>
+      <ion-range *ngIf="question.tipo == 2" [(ngModel)]="rangeValue" min="0" max="5" pin="true" snaps="true"></ion-range>
+      <ion-list *ngIf="question.tipo == 3" radio-group [(ngModel)]="radioValue">
+        <ion-item *ngFor="let resposta of question.listaRespostas">
+          <ion-label>{{resposta}}</ion-label>
+          <ion-radio value="{{resposta}}"></ion-radio>
         </ion-item>
       </ion-list>
     </ion-slide>
@@ -51,7 +33,7 @@
 
 </ion-content>
 
-<ion-footer>
+<ion-footer *ngIf="!keyboard.isOpen()">
     <ion-toolbar color="primary">
       <ion-buttons start>
         <button ion-button icon-only (click)="slidesBack()">

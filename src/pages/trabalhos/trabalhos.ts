@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { QuestionsPage } from './../questions/questions';
 
 /**
  * Generated class for the TrabalhosPage page.
@@ -52,7 +53,7 @@ export class TrabalhosPage {
               "discursiva": false,
               "id": 154,
               "nome": "Pergunta 3",
-              "respostas": "alternativa 1; alternativa 2; alternativa 3; alternativa 4"
+              "respostas": "alternativa 1;alternativa 2;alternativa 3;alternativa 4"
             }
         ]
       },
@@ -81,6 +82,10 @@ export class TrabalhosPage {
         ]
       }
     ];
+  }
+
+  goToQuestions(trabalho: Trabalho) {
+    this.navCtrl.push(QuestionsPage, { trabalho: trabalho });
   }
 
 }

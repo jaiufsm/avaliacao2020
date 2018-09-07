@@ -18,7 +18,7 @@
 
 <ion-content padding>
   <ion-list>
-    <button ion-item *ngFor="let trabalho of trabalhos">
+    <button ion-item *ngFor="let trabalho of trabalhos" (click)="goToQuestions(trabalho)">
       <h2>{{trabalho.titulo}}</h2>
       <p>{{trabalho.apresentador}}</p>
     </button>
