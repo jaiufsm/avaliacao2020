@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Trabalho } from '../../interfaces/trabalho';
 
 /*
   Generated class for the ApiUfsmProvider provider.
@@ -76,14 +77,6 @@ export class ApiUfsmProvider {
     return this.trabalhos;
   }
 
-}
-
-interface Trabalho{
-  id: number,
-  titulo: string,
-  apresentador: string,
-  apresentacao: {data: string, predio: string, sala:string},
-  perguntas: Array<{discursiva: boolean, id: number, nome: string, respostas: string}>
 }
 
 interface JsonResponse{

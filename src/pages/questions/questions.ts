@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Slides, Keyboard } from 'ionic-angular';
+import { Trabalho } from '../../interfaces/trabalho';
+import { Pergunta } from '../../interfaces/pergunta';
 
 /**
  * Generated class for the QuestionsPage page.
@@ -76,21 +78,4 @@ export class QuestionsPage {
     this.slidesIndex = this.slides.getActiveIndex() + 1;
   }
 
-}
-
-interface Pergunta{
-  discursiva: boolean, 
-  id: number, 
-  nome: string, 
-  respostas: string,
-  listaRespostas: Array<string>,
-  tipo: number
-}
-
-interface Trabalho{
-  id: number,
-  titulo: string,
-  apresentador: string,
-  apresentacao: {data: string, predio: string, sala:string},
-  perguntas: Array<Pergunta>
 }

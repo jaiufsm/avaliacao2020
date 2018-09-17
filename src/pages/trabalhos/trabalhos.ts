@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { QuestionsPage } from './../questions/questions';
+import { Trabalho } from '../../interfaces/trabalho';
 
 /**
  * Generated class for the TrabalhosPage page.
@@ -88,12 +89,4 @@ export class TrabalhosPage {
     this.navCtrl.push(QuestionsPage, { trabalho: trabalho });
   }
 
-}
-
-interface Trabalho{
-  id: number,
-  titulo: string,
-  apresentador: string,
-  apresentacao: {data: string, predio: string, sala:string},
-  perguntas: Array<{discursiva: boolean, id: number, nome: string, respostas: string}>
 }
