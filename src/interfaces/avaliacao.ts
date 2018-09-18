@@ -4,7 +4,7 @@ export interface Avaliacao{
     estado: Estado
 }
 
-enum Estado{
+export enum Estado{
     NaoAvaliado,
     NaoEnviado,
     Enviado

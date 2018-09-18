@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { NgForage, NgForageCache } from "ngforage";
+import { NgForage } from "ngforage";
 import { Trabalho } from '../../interfaces/trabalho';
 import { Avaliacao } from '../../interfaces/avaliacao';
 
@@ -16,7 +16,7 @@ export class LocalDataProvider {
   readonly trabalhosDB: string;
   readonly avaliacoesDB: string;
 
-  constructor(public http: HttpClient, private ngf: NgForage, private cache: NgForageCache) {
+  constructor(public http: HttpClient, private ngf: NgForage) {
     console.log('Hello LocalDataProvider Provider');
     this.trabalhosDB = 'trabalhos';
     this. avaliacoesDB = 'avaliacoes';

@@ -18,16 +18,27 @@
 
 <ion-content padding>
   <ion-slides (ionSlideDidChange)="slideChanged()">
-    <ion-slide *ngFor="let question of questions">
+    <ion-slide *ngFor="let question of questions; let i = index">
       <h2>{{question.nome}}</h2>
-      <ion-textarea *ngIf="question.tipo == 1" placeholder="Resposta"></ion-textarea>
-      <ion-range *ngIf="question.tipo == 2" [(ngModel)]="rangeValue" min="0" max="5" pin="true" snaps="true"></ion-range>
-      <ion-list *ngIf="question.tipo == 3" radio-group [(ngModel)]="radioValue">
+      <ion-textarea *ngIf="question.tipo == 1" placeholder="Resposta" [(ngModel)]="avaliacao.respostas[i]"></ion-textarea>
+      <ion-range *ngIf="question.tipo == 2" [(ngModel)]="avaliacao.respostas[i]" min="0" max="5" pin="true" snaps="true"></ion-range>
+      <ion-list *ngIf="question.tipo == 3" radio-group [(ngModel)]="avaliacao.respostas[i]">
         <ion-item *ngFor="let resposta of question.listaRespostas">
           <ion-label>{{resposta}}</ion-label>
           <ion-radio value="{{resposta}}"></ion-radio>
         </ion-item>
       </ion-list>
+    </ion-slide>
+    <ion-slide>
+      <h2>Respostas:</h2>
+      <ion-list>
+        <ion-item text-wrap *ngFor="let question of questions; let i = index" (click)="slideTo(i)">
+          <h2>{{i+1}}. {{question.nome}}</h2>
+          <p>{{avaliacao.respostas[i]}}</p>
+          <p *ngIf="!avaliacao.respostas[i]" style="color:red">Não respondido</p>
+        </ion-item>
+      </ion-list>
+      <button ion-button>Enviar Respostas</button>
     </ion-slide>
   </ion-slides>
 
