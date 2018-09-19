@@ -20,7 +20,8 @@
   <ion-list>
     <button ion-item *ngFor="let trabalho of trabalhos" (click)="goToQuestions(trabalho)">
       <h2>{{trabalho.titulo}}</h2>
-      <p>{{trabalho.apresentador}}</p>
+      <h3>{{trabalho.apresentador}}</h3>
+      <p>Não avaliado</p>
     </button>
   </ion-list>
 </ion-content>

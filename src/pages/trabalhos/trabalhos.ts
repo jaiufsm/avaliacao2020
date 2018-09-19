@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { QuestionsPage } from './../questions/questions';
 import { Trabalho } from '../../interfaces/trabalho';
+import { ApiUfsmProvider } from '../../providers/api-ufsm/api-ufsm';
+import { LocalDataProvider } from '../../providers/local-data/local-data';
 
 /**
  * Generated class for the TrabalhosPage page.
@@ -17,72 +19,30 @@ import { Trabalho } from '../../interfaces/trabalho';
 })
 export class TrabalhosPage {
 
-  trabalhos: Array<Trabalho>;
+  public trabalhos: Array<Trabalho>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public apiUfsmProvider: ApiUfsmProvider,
+    public localDataProvider: LocalDataProvider,
+    private loadingCtrl: LoadingController
+  ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TrabalhosPage');
   }
 
   ngOnInit(){
-    this.trabalhos = [
-      {
-        "id": 25424,
-        "titulo": "SOBRE JORNALISTAS MILITANTES: FORMAÇÃO, PARTICIPAÇÃO E JORNALISMO EM MOVIMENTOS SOCIAIS",
-        "apresentador": "JULIA MARA SAGGIORATTO",
-        "apresentacao": {
-            "data": "2018-05-11T09:12:43.435",
-            "predio": "CSSH 74A",
-            "sala": "Painel 12"
-        },
-        "perguntas": [
-            {
-                "discursiva": true,
-                "id": 121,
-                "nome": "Preencha o campo ao lado com a palavra 'APROVADO' e, caso deseje, faça um comentário sobre a qualidade do trabalho. Caso o trabalho necessite revisão ou não seja aprovado, use o campo para escrever sua justificativa.",
-                "respostas": null
-            },
-            {
-                "discursiva": false,
-                "id": 141,
-                "nome": "Na sua opinião, o trabalho é bom?",
-                "respostas": "0;1;2;3;4;5"
-            },
-            {
-              "discursiva": false,
-              "id": 154,
-              "nome": "Pergunta 3",
-              "respostas": "alternativa 1;alternativa 2;alternativa 3;alternativa 4"
-            }
-        ]
-      },
-      {
-        "id": 25424,
-        "titulo": "TRABALHO 2",
-        "apresentador": "APRESENTADOR 2",
-        "apresentacao": {
-            "data": "2018-05-11T09:12:43.435",
-            "predio": "CSSH 74A",
-            "sala": "Painel 12"
-        },
-        "perguntas": [
-            {
-                "discursiva": true,
-                "id": 121,
-                "nome": "Preencha o campo ao lado com a palavra 'APROVADO' e, caso deseje, faça um comentário sobre a qualidade do trabalho. Caso o trabalho necessite revisão ou não seja aprovado, use o campo para escrever sua justificativa.",
-                "respostas": null
-            },
-            {
-                "discursiva": false,
-                "id": 141,
-                "nome": "Na sua opinião, o trabalho é bom?",
-                "respostas": "0;1;2;3;4;5"
-            }
-        ]
-      }
-    ];
+    let loader = this.loadingCtrl.create({
+      content: "Carregando...",
+      duration: 10000
+    });
+    loader.present();
+    this.apiUfsmProvider.getTrabalhos().subscribe(trabalhos => {
+      this.trabalhos = trabalhos;
+      loader.dismiss().catch(() => {});
+    });
   }
 
   goToQuestions(trabalho: Trabalho) {

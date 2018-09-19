@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Trabalho } from '../../interfaces/trabalho';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { LocalDataProvider } from '../local-data/local-data';
 
 /*
@@ -12,42 +13,47 @@ import { LocalDataProvider } from '../local-data/local-data';
 @Injectable()
 export class ApiUfsmProvider {
 
-  private trabalhos: Array<Trabalho>;
+  //private trabalhos: Array<Trabalho>;
   private readonly url: string;
   private readonly headers: HttpHeaders;
+  private trabalhosObs: BehaviorSubject<Array<Trabalho>>;
 
-  constructor(public http: HttpClient, private localDataProvider: LocalDataProvider) {
+  constructor(public http: HttpClient, public localDataProvider: LocalDataProvider) {
     console.log('Hello ApiUfsmProvider Provider');
-    this.url = "";
+    this.url = "https://raw.githubusercontent.com/Felipe-Marin/pwa-jai-ufsm/master/api.json";
     let token = "";
     let deviceID = "";
     this.headers = new HttpHeaders({
       'X-UFSM-Access-Token': token,
       'X-UFSM-Device-ID': deviceID
     });
+    this.trabalhosObs = new BehaviorSubject([]);
   }
 
-  public ngOnInit(){
-    this.http.get(this.url, {headers: this.headers}).subscribe((response: JsonResponse) => {
+  public getTrabalhos(){
+    this.http.get(this.url).subscribe((response: JsonResponse) => {
       if(!response.error){
-        this.updateTrabalhos(response.trabalhos);
+        this.trabalhosObs.next(response.trabalhos);
+        this.localDataProvider.setTrabalhos(response.trabalhos)
+          .then(()=>console.log("OK"))
+          .catch(console.error);
       }
     });
+    return this.trabalhosObs;
   }
 
-  /**
+   /**
    * A função sempre atualiza os trabalhos salvos localmente com os dados
    * retornados pela requisição ao servidor, alternativamente, pode ser
    * alterada para atualizar somente os dados faltantes.
    * @param trabalhos 
-   */
-  private updateTrabalhos(trabalhos: Array<Trabalho>){
-    this.localDataProvider.setTrabalhos(trabalhos);
-  }
-
-  public getTrabalhos(){
-    return this.trabalhos;
-  }
+   *
+  private updateTrabalhos(){
+    let trabalhos = this.apiUfsmProvider.getTrabalhos;
+    if(trabalhos){
+      this.setTrabalhos(trabalhos);
+    }
+  }*/
 
 }
 

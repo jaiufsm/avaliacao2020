@@ -16,10 +16,10 @@ export class LocalDataProvider {
   readonly trabalhosDB: string;
   readonly avaliacoesDB: string;
 
-  constructor(public http: HttpClient, private ngf: NgForage) {
+  constructor(public http: HttpClient, public ngf: NgForage) {
     console.log('Hello LocalDataProvider Provider');
     this.trabalhosDB = 'trabalhos';
-    this. avaliacoesDB = 'avaliacoes';
+    this.avaliacoesDB = 'avaliacoes';
   }
 
   public ngOnInit(){
@@ -41,6 +41,5 @@ export class LocalDataProvider {
   public setAvaliacoes<T = Array<Avaliacao>>(avaliacoes: T){
     return this.ngf.setItem<T>(this.avaliacoesDB, avaliacoes);
   }
-
 
 }
