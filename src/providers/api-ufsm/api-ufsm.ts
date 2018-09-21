@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, HostListener } from '@angular/core';
 import { Trabalho } from '../../interfaces/trabalho';
+import { Avaliacao, Estado } from '../../interfaces/avaliacao';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { LocalDataProvider } from '../local-data/local-data';
 
@@ -17,6 +18,7 @@ export class ApiUfsmProvider {
   private readonly url: string;
   private readonly headers: HttpHeaders;
   private trabalhosObs: BehaviorSubject<Array<Trabalho>>;
+  private avaliacoesPendentes: Array<Avaliacao>;
 
   constructor(public http: HttpClient, public localDataProvider: LocalDataProvider) {
     console.log('Hello ApiUfsmProvider Provider');
@@ -28,6 +30,17 @@ export class ApiUfsmProvider {
       'X-UFSM-Device-ID': deviceID
     });
     this.trabalhosObs = new BehaviorSubject([]);
+    this.avaliacoesPendentes = new Array<Avaliacao>();
+  }
+
+  ngOnInit(){
+    this.localDataProvider.getAvaliacoesPendentes().then(avaliacoesPendentes => {
+      this.avaliacoesPendentes = avaliacoesPendentes;
+      if(navigator.onLine){
+        this.sendAvaliacoes();
+      }
+    });
+    
   }
 
   public getTrabalhos(){
@@ -37,23 +50,48 @@ export class ApiUfsmProvider {
         this.localDataProvider.setTrabalhos(response.trabalhos)
           .then(()=>console.log("OK"))
           .catch(console.error);
+      }else{
+        this.getTrabalhosLocal();
       }
+    }, err => {
+      console.log(err);
+      this.getTrabalhosLocal();
     });
     return this.trabalhosObs;
   }
 
-   /**
-   * A função sempre atualiza os trabalhos salvos localmente com os dados
-   * retornados pela requisição ao servidor, alternativamente, pode ser
-   * alterada para atualizar somente os dados faltantes.
-   * @param trabalhos 
-   *
-  private updateTrabalhos(){
-    let trabalhos = this.apiUfsmProvider.getTrabalhos;
-    if(trabalhos){
-      this.setTrabalhos(trabalhos);
+  private getTrabalhosLocal(){
+    this.localDataProvider.getTrabalhos().then(trabalhos => {
+      this.trabalhosObs.next(trabalhos);
+    });
+  }
+
+  public setAvaliacao(avaliacao: Avaliacao){
+    let sendAvaliacao = new Promise((resolve, reject) => {
+      if(navigator.onLine){
+        avaliacao.estado = Estado.Enviado;
+        this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
+          resolve();
+        });
+      }else{
+        avaliacao.estado = Estado.NaoEnviado;
+        this.avaliacoesPendentes.push(avaliacao);
+        this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
+          reject();
+        });
+      }
+    });
+    return sendAvaliacao;
+  }
+
+  @HostListener('document:online')
+  private sendAvaliacoes(){
+    for(let i = 0; i < this.avaliacoesPendentes.length; i++){
+      this.setAvaliacao(this.avaliacoesPendentes[i]).then(() => {
+        this.avaliacoesPendentes.splice(i, 1);
+      });
     }
-  }*/
+  }
 
 }
 

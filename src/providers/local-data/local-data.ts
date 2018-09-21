@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NgForage } from "ngforage";
 import { Trabalho } from '../../interfaces/trabalho';
-import { Avaliacao } from '../../interfaces/avaliacao';
+import { Avaliacao, Estado } from '../../interfaces/avaliacao';
 
 /*
   Generated class for the LocalDataProvider provider.
@@ -23,23 +23,45 @@ export class LocalDataProvider {
   }
 
   public ngOnInit(){
-    this.ngf.name = 'JAI UFSM';
+    this.ngf.name = 'JAI';
   }
 
   public getTrabalhos<T = Array<Trabalho>>(): Promise<T>{
+    this.ngf.storeName = 'trabalhos';
     return this.ngf.getItem<T>(this.trabalhosDB);
   }
 
   public setTrabalhos<T = Array<Trabalho>>(trabalhos: T){
+    this.ngf.storeName = 'trabalhos';
     return this.ngf.setItem<T>(this.trabalhosDB, trabalhos);
   }
 
-  public getAvaliacoes<T = Array<Avaliacao>>(): Promise<T>{
-    return this.ngf.getItem<T>(this.avaliacoesDB);
+  public getAvaliacao<T = Avaliacao>(id: number): Promise<T>{
+    this.ngf.storeName = 'avaliacoes';
+    return this.ngf.getItem<T>(String(id));
   }
 
-  public setAvaliacoes<T = Array<Avaliacao>>(avaliacoes: T){
-    return this.ngf.setItem<T>(this.avaliacoesDB, avaliacoes);
+  public setAvaliacao<T = Avaliacao>(id: number, avaliacao: T){
+    this.ngf.storeName = 'avaliacoes';
+    return this.ngf.setItem<T>(String(id), avaliacao);
+  }
+
+  public getAvaliacoesPendentes(){
+    this.ngf.storeName = 'avaliacoes';
+    let getAvaliacoesPromise = new Promise<Array<Avaliacao>>((resolve, reject) => {
+      let avaliacoes = new Array<Avaliacao>();
+      this.ngf.iterate((value: Avaliacao, key, iterationNumber) => {
+        if(value.estado == Estado.NaoEnviado){
+          avaliacoes.push(value);
+        }
+      }).then(()=>{
+        resolve(avaliacoes);
+      }, err => {
+        reject();
+      });
+    });
+    return getAvaliacoesPromise;
+    
   }
 
 }
