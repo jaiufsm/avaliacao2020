@@ -18,10 +18,10 @@
 
 <ion-content padding>
   <ion-list>
-    <button ion-item *ngFor="let trabalho of trabalhos" (click)="goToQuestions(trabalho)">
+    <button ion-item *ngFor="let trabalho of trabalhos; let i = index" (click)="goToQuestions(trabalho)">
       <h2>{{trabalho.titulo}}</h2>
       <h3>{{trabalho.apresentador}}</h3>
-      <p>Não avaliado</p>
+      <p *ngIf="estados">{{estados[i]}}</p>
     </button>
   </ion-list>
 </ion-content>

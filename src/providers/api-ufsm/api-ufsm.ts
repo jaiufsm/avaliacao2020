@@ -46,10 +46,25 @@ export class ApiUfsmProvider {
   public getTrabalhos(){
     this.http.get(this.url).subscribe((response: JsonResponse) => {
       if(!response.error){
-        this.trabalhosObs.next(response.trabalhos);
-        this.localDataProvider.setTrabalhos(response.trabalhos)
-          .then(()=>console.log("OK"))
-          .catch(console.error);
+        let trabalhos = response.trabalhos;
+        let avaliacoes = new Array<Avaliacao>();
+        for(let i = 0; i < trabalhos.length; i++){
+          this.localDataProvider.getAvaliacao(trabalhos[i].id).then(avaliacao => {
+            if(!avaliacao){
+              let avaliacao = {
+                trabalho: trabalhos[i].id,
+                estado: Estado.NaoAvaliado,
+                respostas: new Array<string>(trabalhos[i].perguntas.length)
+              }
+              avaliacoes.push(avaliacao);
+            }
+          });   
+        }
+        this.localDataProvider.setTrabalhos(trabalhos).then(()=>{
+          this.localDataProvider.setAvaliacoes(avaliacoes).then(()=>{
+            this.trabalhosObs.next(trabalhos);
+          });
+        });
       }else{
         this.getTrabalhosLocal();
       }
@@ -67,13 +82,20 @@ export class ApiUfsmProvider {
   }
 
   public setAvaliacao(avaliacao: Avaliacao){
+    console.log('setavaliacao');
     let sendAvaliacao = new Promise((resolve, reject) => {
       if(navigator.onLine){
+        console.log('online');
         avaliacao.estado = Estado.Enviado;
         this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
+          console.log('success');
           resolve();
+        }, err => {
+          console.log('erro');
+          console.log(err);
         });
       }else{
+        console.log('offline');
         avaliacao.estado = Estado.NaoEnviado;
         this.avaliacoesPendentes.push(avaliacao);
         this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{

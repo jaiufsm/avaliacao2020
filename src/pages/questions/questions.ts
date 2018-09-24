@@ -1,8 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Slides, Keyboard } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Slides, Keyboard, ToastController } from 'ionic-angular';
 import { Trabalho } from '../../interfaces/trabalho';
 import { Pergunta } from '../../interfaces/pergunta';
 import { Avaliacao, Estado } from '../../interfaces/avaliacao';
+import { LocalDataProvider } from '../../providers/local-data/local-data';
+import { ApiUfsmProvider } from '../../providers/api-ufsm/api-ufsm';
 
 /**
  * Generated class for the QuestionsPage page.
@@ -27,7 +29,8 @@ export class QuestionsPage {
   slidesIndex: number;
   slidesLength: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public keyboard: Keyboard) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController, public keyboard: Keyboard, 
+    private localDataProvider: LocalDataProvider, private apiUfsmProvider: ApiUfsmProvider) {
 
   }
 
@@ -47,6 +50,11 @@ export class QuestionsPage {
         estado: Estado.NaoAvaliado,
         respostas: new Array<string>(this.questions.length)
       };
+      this.localDataProvider.getAvaliacao(this.avaliacao.trabalho).then(avaliacao => {
+        if(avaliacao){
+          this.avaliacao = avaliacao;
+        }
+      });
     }
 
   }
@@ -72,6 +80,26 @@ export class QuestionsPage {
         return 2;
       }
     }
+  }
+
+  public setAvaliacao(){
+    let index = this.slides.getActiveIndex();
+    console.log('setavaliacao');
+    this.apiUfsmProvider.setAvaliacao(this.avaliacao).then(()=> {
+      this.presentToast('Avaliação enviada com sucesso.');
+      this.navCtrl.goToRoot({});
+    }, err => {
+      this.presentToast('Não foi possível enviar a avaliação. Uma nova tentativa de envio será feita automaticamente quando houver conexão a internet.')
+    });
+  }
+
+  private presentToast(message: string){
+    const toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: 'middle'
+    });
+    toast.present();
   }
 
   public slidesBack(){

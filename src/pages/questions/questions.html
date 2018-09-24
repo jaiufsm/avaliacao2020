@@ -38,7 +38,7 @@
           <p *ngIf="!avaliacao.respostas[i]" style="color:red">Não respondido</p>
         </ion-item>
       </ion-list>
-      <button ion-button>Enviar Respostas</button>
+      <button ion-button (click)="setAvaliacao($event)">Enviar Respostas</button>
     </ion-slide>
   </ion-slides>
 

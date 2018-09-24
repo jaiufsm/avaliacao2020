@@ -20,6 +20,7 @@ import { LocalDataProvider } from '../../providers/local-data/local-data';
 export class TrabalhosPage {
 
   public trabalhos: Array<Trabalho>;
+  public estados: Array<string>;
 
   constructor(
     public navCtrl: NavController, 
@@ -41,7 +42,10 @@ export class TrabalhosPage {
     loader.present();
     this.apiUfsmProvider.getTrabalhos().subscribe(trabalhos => {
       this.trabalhos = trabalhos;
-      loader.dismiss().catch(() => {});
+      this.localDataProvider.getEstados().then(estados => {
+        this.estados = estados;
+        loader.dismiss().catch(() => {});
+      });
     });
   }
 
