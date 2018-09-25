@@ -5,7 +5,7 @@ export interface Avaliacao{
 }
 
 export enum Estado{
-    NaoAvaliado,
-    NaoEnviado,
-    Enviado
+    "Não Avaliado",
+    "Não Enviado",
+    "Enviado"
 }

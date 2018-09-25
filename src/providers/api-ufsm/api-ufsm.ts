@@ -1,9 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, HostListener } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Trabalho } from '../../interfaces/trabalho';
 import { Avaliacao, Estado } from '../../interfaces/avaliacao';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { LocalDataProvider } from '../local-data/local-data';
+import { fromEvent } from 'rxjs/observable/fromEvent';
 
 /*
   Generated class for the ApiUfsmProvider provider.
@@ -16,31 +17,28 @@ export class ApiUfsmProvider {
 
   //private trabalhos: Array<Trabalho>;
   private readonly url: string;
-  private readonly headers: HttpHeaders;
+  //private readonly headers: HttpHeaders;
   private trabalhosObs: BehaviorSubject<Array<Trabalho>>;
-  private avaliacoesPendentes: Array<Avaliacao>;
 
   constructor(public http: HttpClient, public localDataProvider: LocalDataProvider) {
     console.log('Hello ApiUfsmProvider Provider');
     this.url = "https://raw.githubusercontent.com/Felipe-Marin/pwa-jai-ufsm/master/api.json";
-    let token = "";
+    /*let token = "";
     let deviceID = "";
     this.headers = new HttpHeaders({
       'X-UFSM-Access-Token': token,
       'X-UFSM-Device-ID': deviceID
-    });
+    });*/
     this.trabalhosObs = new BehaviorSubject([]);
-    this.avaliacoesPendentes = new Array<Avaliacao>();
+    fromEvent(window, 'online').subscribe(()=>{
+      this.sendAvaliacoes();
+    });
   }
 
   ngOnInit(){
-    this.localDataProvider.getAvaliacoesPendentes().then(avaliacoesPendentes => {
-      this.avaliacoesPendentes = avaliacoesPendentes;
-      if(navigator.onLine){
-        this.sendAvaliacoes();
-      }
-    });
-    
+    if(navigator.onLine){
+      this.sendAvaliacoes();
+    }
   }
 
   public getTrabalhos(){
@@ -53,7 +51,7 @@ export class ApiUfsmProvider {
             if(!avaliacao){
               let avaliacao = {
                 trabalho: trabalhos[i].id,
-                estado: Estado.NaoAvaliado,
+                estado: Estado["Não Avaliado"],
                 respostas: new Array<string>(trabalhos[i].perguntas.length)
               }
               avaliacoes.push(avaliacao);
@@ -86,7 +84,7 @@ export class ApiUfsmProvider {
     let sendAvaliacao = new Promise((resolve, reject) => {
       if(navigator.onLine){
         console.log('online');
-        avaliacao.estado = Estado.Enviado;
+        avaliacao.estado = Estado["Enviado"];
         this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
           console.log('success');
           resolve();
@@ -96,8 +94,7 @@ export class ApiUfsmProvider {
         });
       }else{
         console.log('offline');
-        avaliacao.estado = Estado.NaoEnviado;
-        this.avaliacoesPendentes.push(avaliacao);
+        avaliacao.estado = Estado["Não Enviado"];
         this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
           reject();
         });
@@ -106,13 +103,14 @@ export class ApiUfsmProvider {
     return sendAvaliacao;
   }
 
-  @HostListener('document:online')
   private sendAvaliacoes(){
-    for(let i = 0; i < this.avaliacoesPendentes.length; i++){
-      this.setAvaliacao(this.avaliacoesPendentes[i]).then(() => {
-        this.avaliacoesPendentes.splice(i, 1);
-      });
-    }
+    this.localDataProvider.getAvaliacoesPendentes().then(avaliacoesPendentes => {
+      for(let i = 0; i < avaliacoesPendentes.length; i++){
+        this.setAvaliacao(avaliacoesPendentes[i]).then(()=>{
+          console.log('avaliacao pendente enviada');
+        });
+      }
+    });
   }
 
 }

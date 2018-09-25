@@ -47,7 +47,7 @@ export class QuestionsPage {
       this.initQuestions();
       this.avaliacao = {
         trabalho: this.trabalho.id,
-        estado: Estado.NaoAvaliado,
+        estado: Estado["Não Avaliado"],
         respostas: new Array<string>(this.questions.length)
       };
       this.localDataProvider.getAvaliacao(this.avaliacao.trabalho).then(avaliacao => {
