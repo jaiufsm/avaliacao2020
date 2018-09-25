@@ -588,7 +588,7 @@ var LocalDataProvider = /** @class */ (function () {
         var getAvaliacoesPromise = new Promise(function (resolve, reject) {
             var avaliacoes = new Array();
             _this.ngf.iterate(function (value, key, iterationNumber) {
-                if (value.estado == __WEBPACK_IMPORTED_MODULE_3__interfaces_avaliacao__["a" /* Estado */]["Não Enviado"]) {
+                if (value.estado == __WEBPACK_IMPORTED_MODULE_3__interfaces_avaliacao__["a" /* Estado */]["Avaliado mas não enviado"]) {
                     avaliacoes.push(value);
                 }
             }).then(function () {
@@ -615,9 +615,10 @@ var LocalDataProvider = /** @class */ (function () {
     };
     LocalDataProvider = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["A" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_common_http__["a" /* HttpClient */], __WEBPACK_IMPORTED_MODULE_2_ngforage__["a" /* NgForage */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_common_http__["a" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_common_http__["a" /* HttpClient */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2_ngforage__["a" /* NgForage */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ngforage__["a" /* NgForage */]) === "function" && _b || Object])
     ], LocalDataProvider);
     return LocalDataProvider;
+    var _a, _b;
 }());
 
 //# sourceMappingURL=local-data.js.map
@@ -632,8 +633,8 @@ var LocalDataProvider = /** @class */ (function () {
 var Estado;
 (function (Estado) {
     Estado[Estado["N\u00E3o Avaliado"] = 0] = "N\u00E3o Avaliado";
-    Estado[Estado["N\u00E3o Enviado"] = 1] = "N\u00E3o Enviado";
-    Estado[Estado["Enviado"] = 2] = "Enviado";
+    Estado[Estado["Avaliado mas n\u00E3o enviado"] = 1] = "Avaliado mas n\u00E3o enviado";
+    Estado[Estado["Avaliado e Enviado"] = 2] = "Avaliado e Enviado";
 })(Estado || (Estado = {}));
 //# sourceMappingURL=avaliacao.js.map
 
@@ -744,7 +745,7 @@ var ApiUfsmProvider = /** @class */ (function () {
         var sendAvaliacao = new Promise(function (resolve, reject) {
             if (navigator.onLine) {
                 console.log('online');
-                avaliacao.estado = __WEBPACK_IMPORTED_MODULE_2__interfaces_avaliacao__["a" /* Estado */]["Enviado"];
+                avaliacao.estado = __WEBPACK_IMPORTED_MODULE_2__interfaces_avaliacao__["a" /* Estado */]["Avaliado e Enviado"];
                 _this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(function () {
                     console.log('success');
                     resolve();
@@ -755,7 +756,7 @@ var ApiUfsmProvider = /** @class */ (function () {
             }
             else {
                 console.log('offline');
-                avaliacao.estado = __WEBPACK_IMPORTED_MODULE_2__interfaces_avaliacao__["a" /* Estado */]["Não Enviado"];
+                avaliacao.estado = __WEBPACK_IMPORTED_MODULE_2__interfaces_avaliacao__["a" /* Estado */]["Avaliado mas não enviado"];
                 _this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(function () {
                     reject();
                 });
