@@ -84,7 +84,7 @@ export class ApiUfsmProvider {
     let sendAvaliacao = new Promise((resolve, reject) => {
       if(navigator.onLine){
         console.log('online');
-        avaliacao.estado = Estado["Enviado"];
+        avaliacao.estado = Estado["Avaliado e Enviado"];
         this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
           console.log('success');
           resolve();
@@ -94,7 +94,7 @@ export class ApiUfsmProvider {
         });
       }else{
         console.log('offline');
-        avaliacao.estado = Estado["Não Enviado"];
+        avaliacao.estado = Estado["Avaliado mas não enviado"];
         this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
           reject();
         });

@@ -61,7 +61,7 @@ export class LocalDataProvider {
     let getAvaliacoesPromise = new Promise<Array<Avaliacao>>((resolve, reject) => {
       let avaliacoes = new Array<Avaliacao>();
       this.ngf.iterate((value: Avaliacao, key, iterationNumber) => {
-        if(value.estado == Estado["Não Enviado"]){
+        if(value.estado == Estado["Avaliado mas não enviado"]){
           avaliacoes.push(value);
         }
       }).then(()=>{

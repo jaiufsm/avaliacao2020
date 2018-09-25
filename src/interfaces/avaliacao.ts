@@ -6,6 +6,6 @@ export interface Avaliacao{
 
 export enum Estado{
     "Não Avaliado",
-    "Não Enviado",
-    "Enviado"
+    "Avaliado mas não enviado",
+    "Avaliado e Enviado"
 }
