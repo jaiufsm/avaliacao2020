@@ -89,7 +89,8 @@ export class QuestionsPage {
       this.presentToast('Avaliação enviada com sucesso.');
       this.navCtrl.goToRoot({});
     }, err => {
-      this.presentToast('Não foi possível enviar a avaliação. Uma nova tentativa de envio será feita automaticamente quando houver conexão a internet.')
+      this.presentToast('Não foi possível enviar a avaliação. Uma nova tentativa de envio será feita automaticamente quando houver conexão a internet.');
+      this.navCtrl.goToRoot({});
     });
   }
 
