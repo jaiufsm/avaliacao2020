@@ -15,23 +15,65 @@
             },
             "perguntas": [
                 {
-                    "discursiva": true,
-                    "id": 121,
-                    "nome": "Preencha o campo ao lado com a palavra 'APROVADO' e, caso deseje, faça um comentário sobre a qualidade do trabalho. Caso o trabalho necessite revisão ou não seja aprovado, use o campo para escrever sua justificativa.",
-                    "respostas": null
+                    "discursiva": false,
+                    "id": 101,
+                    "nome": "1) O título do trabalho reflete seu conteúdo e as palavras usadas são adequadas?",
+                    "respostas": "A;B;C;D;E"
                 },
                 {
                     "discursiva": false,
-                    "id": 141,
-                    "nome": "Na sua opinião, o trabalho é bom?",
-                    "respostas": "0;1;2;3;4;5"
+                    "id": 102,
+                    "nome": "2) O tema do trabalho é relevante na sua respectiva área do conhecimento?",
+                    "respostas": "A;B;C;D;E"
                 },
                 {
                     "discursiva": false,
-                    "id": 154,
-                    "nome": "Pergunta 3",
-                    "respostas": "alternativa 1;alternativa 2;alternativa 3;alternativa 4"
-                }
+                    "id": 103,
+                    "nome": "3) A contextualização do trabalho com a literatura e/ou processos criativos existentes é feita de forma satisfatória?",
+                    "respostas": "A;B;C;D;E"
+                },
+                {
+                    "discursiva": false,
+                    "id": 104,
+                    "nome": "4) A metodologia empregada no trabalho reflete o atual estado da arte na sua respectiva área do conhecimento?",
+                    "respostas": "A;B;C;D;E"
+                },
+                {
+                    "discursiva": false,
+                    "id": 105,
+                    "nome": "5) Os resultados são apresentados de forma clara, estruturada e coerente, utilizando-se dos meios adequados (tabelas, gráficos, etc.)?",
+                    "respostas": "A;B;C;D;E"
+                },
+                {
+                    "discursiva": false,
+                    "id": 106,
+                    "nome": "6) A discussão dos resultados enfatizou seus aspectos mais relevantes e suas limitações?",
+                    "respostas": "A;B;C;D;E"
+                },
+                {
+                    "discursiva": false,
+                    "id": 107,
+                    "nome": "7) As conclusões do trabalho são coerentes com seus resultados, métodos e objetivos?",
+                    "respostas": "A;B;C;D;E"
+                },
+                {
+                    "discursiva": false,
+                    "id": 108,
+                    "nome": "8) O pôster ou os slides continham as informações necessárias de forma sintética e objetiva?",
+                    "respostas": "A;B;C;D;E"
+                },
+                {
+                    "discursiva": false,
+                    "id": 109,
+                    "nome": "9) O apresentador domina o conteúdo do trabalho apresentado?",
+                    "respostas": "A;B;C;D;E"
+                },
+                {
+                    "discursiva": false,
+                    "id": 110,
+                    "nome": "10) Qual conceito o(a) Sr(a) daria para o trabalho/apresentador como um todo?",
+                    "respostas": "A;B;C;D;E"
+                }                                                                
             ]
         },
         {
