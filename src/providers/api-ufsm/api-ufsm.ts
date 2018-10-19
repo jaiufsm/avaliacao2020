@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Trabalho } from '../../interfaces/trabalho';
 import { Avaliacao, Estado } from '../../interfaces/avaliacao';
@@ -85,6 +85,54 @@ export class ApiUfsmProvider {
       if(navigator.onLine){
         console.log('online');
         avaliacao.estado = Estado["Avaliado e Enviado"];
+
+        /// Begin googleForms test
+        let formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfc1V0zMpY4E49ZfPT6g7ok0oZ707fAZH_V9VgCjqLbuyvAjg/formResponse";
+/*
+        let formBody = {
+          "entry.931167567":"testecomtypescript",
+          "entry.1091362213":"testando",
+          "entry.459559554":"C",
+          "entry.1977341862":"D",
+          "entry.673029848":"E",
+          "entry.1465874438":"A",
+          "entry.1043619085":"B",
+          "entry.667784152":"3",
+          "entry.339752743":"4",
+          "entry.1977078333":"5",
+          "entry.291279887":"trab",
+          "entry.1952743550":"aval",
+          "entry.1725844449":"eu"
+        };
+*/
+        let formBody="entry.931167567=A&entry.1091362213=B&entry.459559554=C&entry.1977341862=D&entry.673029848=E&entry.1465874438=A&entry.1043619085=B&entry.667784152=3&entry.339752743=4&entry.1977078333=5&entry.291279887=trab&entry.1952743550=aval&entry.1725844449=eu"
+        let headers = new HttpHeaders({
+          'Content-Type': 'application/x-www-form-urlencoded'});
+        
+        let options = { headers: headers };
+        let postOnGoogleForms = this.http.post(formUrl, formBody, options);
+
+        postOnGoogleForms.subscribe((response: googleResponse) => {
+          if(response.success){
+            console.log('postOnGoogleForms')
+          }else{
+            //console.log(response.erro);
+            console.log('erro no postOnGoogleForms');
+          }
+        }, err => {
+          console.log(err);
+          if(!navigator.onLine){
+            console.log("Erro ao entrar: Não há conexão com a internet");
+          }else{
+            console.log("Erro ao entrar: Tente novamente mais tarde");
+          }
+      
+        });
+
+
+        /// End GoogleForms test
+
+
         this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
           console.log('success');
           resolve();
@@ -122,4 +170,9 @@ interface JsonResponse{
   mensagem: string,
   trabalhos: Array<Trabalho>,
   errorEntity: boolean
+}
+
+
+interface googleResponse{
+  'success': boolean
 }
