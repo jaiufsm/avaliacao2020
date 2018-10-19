@@ -33,7 +33,7 @@
       <h2>Respostas:</h2>
       <ion-list>
         <ion-item text-wrap *ngFor="let question of questions; let i = index" (click)="slideTo(i)">
-          <h2>{{i+1}}. {{question.nome}}</h2>
+          <h2>{{question.nome}}</h2>
           <p>{{avaliacao.respostas[i]}}</p>
           <p *ngIf="!avaliacao.respostas[i]" style="color:red">Não respondido</p>
         </ion-item>

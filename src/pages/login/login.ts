@@ -28,7 +28,7 @@ export class LoginPage {
   }
 
   doLogin(){
-    let url = "http://127.0.0.1:5000/jai/avaliacaoRest/login";
+    let url = "https://jai-ufsm.herokuapp.com/jai/avaliacaoRest/login";
     let body = {
       "login": this.login,
       "password": this.password
