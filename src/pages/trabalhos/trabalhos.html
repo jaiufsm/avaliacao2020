@@ -7,10 +7,13 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
     <ion-title>Trabalhos</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-end (click)="doLogout()">
+        Sair
+        <ion-icon name="log-out"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>

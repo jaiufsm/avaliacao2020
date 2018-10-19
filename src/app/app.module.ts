@@ -9,6 +9,7 @@ import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { TrabalhosPage } from '../pages/trabalhos/trabalhos';
 import { QuestionsPage } from '../pages/questions/questions';
+import { LoginPage } from '../pages/login/login';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -21,7 +22,8 @@ import { LocalDataProvider } from '../providers/local-data/local-data';
     HomePage,
     ListPage,
     TrabalhosPage,
-    QuestionsPage
+    QuestionsPage,
+    LoginPage
   ],
   imports: [
     BrowserModule,
@@ -35,7 +37,8 @@ import { LocalDataProvider } from '../providers/local-data/local-data';
     HomePage,
     ListPage,
     TrabalhosPage,
-    QuestionsPage
+    QuestionsPage,
+    LoginPage
   ],
   providers: [
     StatusBar,

@@ -4,6 +4,7 @@ import { QuestionsPage } from './../questions/questions';
 import { Trabalho } from '../../interfaces/trabalho';
 import { ApiUfsmProvider } from '../../providers/api-ufsm/api-ufsm';
 import { LocalDataProvider } from '../../providers/local-data/local-data';
+import { LoginPage } from '../login/login';
 
 /**
  * Generated class for the TrabalhosPage page.
@@ -51,6 +52,10 @@ export class TrabalhosPage {
 
   goToQuestions(trabalho: Trabalho) {
     this.navCtrl.push(QuestionsPage, { trabalho: trabalho });
+  }
+
+  doLogout(){
+    this.navCtrl.setRoot(LoginPage);
   }
 
 }
