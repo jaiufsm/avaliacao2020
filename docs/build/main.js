@@ -746,8 +746,8 @@ var LoginPage = /** @class */ (function () {
     };
     LoginPage.prototype.doLogin = function () {
         var _this = this;
-        //let url = "https://jai-ufsm.herokuapp.com/jai/avaliacaoRest/login";
-        var url = "http://127.0.0.1:5000/jai/avaliacaoRest/login";
+        var url = "https://jai-ufsm.herokuapp.com/jai/avaliacaoRest/login";
+        //let url = "http://127.0.0.1:5000/jai/avaliacaoRest/login";
         var body = {
             "login": this.login,
             "password": this.password
