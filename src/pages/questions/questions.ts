@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Slides, Keyboard, ToastController } from 'ionic-angular';
 import { Trabalho } from '../../interfaces/trabalho';
-import { Pergunta } from '../../interfaces/pergunta';
+import { Pergunta, Perguntas } from '../../interfaces/pergunta';
 import { Avaliacao, Estado } from '../../interfaces/avaliacao';
 import { LocalDataProvider } from '../../providers/local-data/local-data';
 import { ApiUfsmProvider } from '../../providers/api-ufsm/api-ufsm';
@@ -41,7 +41,11 @@ export class QuestionsPage {
   ngOnInit(){
     if(this.navParams.data.trabalho){
       this.trabalho = this.navParams.data.trabalho;
-      this.questions = this.trabalho.perguntas;
+      if(this.trabalho.evento.includes('Fórum Extensão Conta')){
+        this.questions = Perguntas.perguntasExt;
+      }else{
+        this.questions = Perguntas.perguntasIC;
+      }
       this.slidesIndex = 1;
       this.slidesLength = this.questions.length + 1;
       this.initQuestions();
@@ -83,7 +87,7 @@ export class QuestionsPage {
   }
 
   public setAvaliacao(){
-    let index = this.slides.getActiveIndex();
+    this.slides.getActiveIndex();
     console.log('setavaliacao');
     this.apiUfsmProvider.setAvaliacao(this.avaliacao).then(()=> {
       this.presentToast('Avaliação enviada com sucesso.');

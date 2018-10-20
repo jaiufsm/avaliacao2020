@@ -4,6 +4,7 @@ export interface Trabalho{
     id: number,
     titulo: string,
     apresentador: string,
-    apresentacao: {data: string, predio: string, sala:string},
+    evento: string,
+    //apresentacao: {data: string, predio: string, sala:string},
     perguntas: Array<Pergunta>
 }

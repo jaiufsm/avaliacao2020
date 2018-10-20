@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { QuestionsPage } from './../questions/questions';
 import { Trabalho } from '../../interfaces/trabalho';
+import { Avaliacao, Estado } from '../../interfaces/avaliacao';
 import { ApiUfsmProvider } from '../../providers/api-ufsm/api-ufsm';
 import { LocalDataProvider } from '../../providers/local-data/local-data';
 import { LoginPage } from '../login/login';
@@ -20,6 +21,7 @@ import { LoginPage } from '../login/login';
 })
 export class TrabalhosPage {
 
+  public nome: string;
   public trabalhos: Array<Trabalho>;
   public estados: Array<string>;
 
@@ -41,11 +43,34 @@ export class TrabalhosPage {
       duration: 10000
     });
     loader.present();
-    this.apiUfsmProvider.getTrabalhos().subscribe(trabalhos => {
+    /*this.apiUfsmProvider.getTrabalhos().subscribe(trabalhos => {
       this.trabalhos = trabalhos;
       this.localDataProvider.getEstados().then(estados => {
         this.estados = estados;
         loader.dismiss().catch(() => {});
+      });
+    });*/
+    this.nome = this.navParams.get('nome');
+    this.trabalhos = this.navParams.get('trabalhos');
+    let avaliacoes = new Array<Avaliacao>();
+    for(let i = 0; i < this.trabalhos.length; i++){
+      this.localDataProvider.getAvaliacao(this.trabalhos[i].id).then(avaliacao => {
+        if(!avaliacao){
+          let avaliacao = {
+            trabalho: this.trabalhos[i].id,
+            estado: Estado["Não Avaliado"],
+            respostas: new Array<string>(10)
+          }
+          avaliacoes.push(avaliacao);
+        }
+      });   
+    }
+    this.localDataProvider.setTrabalhos(this.trabalhos).then(()=>{
+      this.localDataProvider.setAvaliacoes(avaliacoes).then(()=>{
+        this.localDataProvider.getEstados().then(estados => {
+          this.estados = estados;
+          loader.dismiss().catch(() => {});
+        });
       });
     });
   }
