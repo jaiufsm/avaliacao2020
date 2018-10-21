@@ -18,8 +18,14 @@
 
 <ion-content padding>
   <ion-slides (ionSlideDidChange)="slideChanged()">
+    <ion-slide>
+      <h3>{{trabalho.titulo}}</h3>
+      <p>Apresentador: {{trabalho.apresentador}}</p>
+      <p>Evento: {{trabalho.evento}}</p>
+      <p>Data: {{trabalho.dia}} - {{trabalho.horario}}</p>
+    </ion-slide>
     <ion-slide *ngFor="let question of questions; let i = index">
-      <h2>{{question.nome}}</h2>
+      <h3>{{question.nome}}</h3>
       <ion-textarea *ngIf="question.tipo == 1" placeholder="Resposta" [(ngModel)]="avaliacao.respostas[i]"></ion-textarea>
       <ion-range *ngIf="question.tipo == 2" [(ngModel)]="avaliacao.respostas[i]" min="0" max="5" pin="true" snaps="true"></ion-range>
       <ion-list *ngIf="question.tipo == 3" radio-group [(ngModel)]="avaliacao.respostas[i]">
@@ -30,6 +36,8 @@
       </ion-list>
     </ion-slide>
     <ion-slide>
+      <p>{{trabalho.titulo}}</p>
+      <p>{{trabalho.apresentador}}</p>
       <h2>Respostas:</h2>
       <ion-list>
         <ion-item text-wrap *ngFor="let question of questions; let i = index" (click)="slideTo(i)">
@@ -48,10 +56,10 @@
       <ion-title>{{slidesIndex}}/{{slidesLength}}</ion-title>
       <ion-buttons end>
         <button ion-button outline *ngIf="slidesIndex == slidesLength" (click)="setAvaliacao($event)">Enviar Respostas</button>
-        <button ion-button icon-only (click)="slidesBack()">
+        <button ion-button icon-only *ngIf="slidesIndex > 1" (click)="slidesBack()">
           <ion-icon name="arrow-back"></ion-icon>
         </button>
-        <button ion-button icon-only (click)="slidesForward()">
+        <button ion-button icon-only *ngIf="slidesIndex < slidesLength" (click)="slidesForward()">
           <ion-icon name="arrow-forward"></ion-icon>
         </button>
       </ion-buttons>

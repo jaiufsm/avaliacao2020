@@ -90,8 +90,22 @@ export class ApiUfsmProvider {
         /// Begin googleForms test
         let formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfc1V0zMpY4E49ZfPT6g7ok0oZ707fAZH_V9VgCjqLbuyvAjg/formResponse";
         let respostas = avaliacao.respostas;
-        let formBody = "";
+        let formBody = new FormData();
+        formBody.append("entry.931167567", respostas[0]);
+        formBody.append("entry.1091362213", respostas[1]);
+        formBody.append("entry.459559554", respostas[2]);
+        formBody.append("entry.1977341862", respostas[3]);
+        formBody.append("entry.673029848", respostas[4]);
+        formBody.append("entry.1465874438", respostas[5]);
+        formBody.append("entry.1043619085", respostas[6]);
+        formBody.append("entry.667784152", respostas[7]);
+        formBody.append("entry.339752743", respostas[8]);
+        formBody.append("entry.1977078333", respostas[9]);
+        formBody.append("entry.291279887", avaliacao.tituloTrabalho);
+        formBody.append("entry.1952743550", avaliacao.avaliador);
+        formBody.append("entry.1725844449", avaliacao.avaliadorReal);
         //respostas
+        /*
         formBody += "entry.931167567=" + respostas[0]
           + "&entry.1091362213=" +  respostas[1]
           + "&entry.459559554=" + respostas[2]
@@ -105,6 +119,7 @@ export class ApiUfsmProvider {
           + "&entry.291279887=" + avaliacao.tituloTrabalho
           + "&entry.1952743550=" + avaliacao.avaliador
           + "&entry.1725844449=" + avaliacao.avaliadorReal;
+        */
 /*
         let formBody = {
           "entry.931167567":"testecomtypescript",
@@ -123,11 +138,11 @@ export class ApiUfsmProvider {
         };
 */
        // let formBody="entry.931167567=A&entry.1091362213=B&entry.459559554=C&entry.1977341862=D&entry.673029848=E&entry.1465874438=A&entry.1043619085=B&entry.667784152=3&entry.339752743=4&entry.1977078333=5&entry.291279887=trab&entry.1952743550=aval&entry.1725844449=eu"
-        let headers = new HttpHeaders({
+        /*let headers = new HttpHeaders({
           'Content-Type': 'application/x-www-form-urlencoded'});
         
-        let options = { headers: headers };
-        let postOnGoogleForms = this.http.post(formUrl, formBody, options);
+        let options = { headers: headers };*/
+        let postOnGoogleForms = this.http.post(formUrl, formBody);
 
         postOnGoogleForms.subscribe((response: googleResponse) => {
           if(response.success){

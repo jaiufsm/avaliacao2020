@@ -48,7 +48,7 @@ export class QuestionsPage {
         this.questions = Perguntas.perguntasIC;
       }
       this.slidesIndex = 1;
-      this.slidesLength = this.questions.length + 1;
+      this.slidesLength = this.questions.length + 2;
       this.initQuestions();
       this.avaliacao = {
         trabalho: this.trabalho.id,
@@ -99,14 +99,8 @@ export class QuestionsPage {
       }
     }
     if(respostasPendentes == 0){
-      this.avaliacao.avaliadorReal = "teste";
-      this.apiUfsmProvider.setAvaliacao(this.avaliacao).then(()=> {
-        this.presentToast('Avaliação enviada com sucesso.');
-        this.navCtrl.pop();
-      }, err => {
-        this.presentToast('Não foi possível enviar a avaliação. Uma nova tentativa de envio será feita automaticamente quando houver conexão a internet.');
-        this.navCtrl.pop();
-      });
+      let prompt = this.showPromptAlert();
+      prompt.present();
     }else{
       this.showAlert('Responda todas as perguntas', '');
     }
@@ -131,6 +125,47 @@ export class QuestionsPage {
     alert.present();
   }
 
+  showPromptAlert(){
+    let prompt = this.alertCtrl.create({
+      title: "Avaliador",
+      message: "Digite o nome de quem está fazendo a avaliação",
+      inputs: [
+        {
+          name: 'nome',
+          placeholder: 'Nome'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: data => {
+            console.log('Cancelado');
+          }
+        },
+        {
+          text: 'Confirmar',
+          handler: data => {
+            console.log('Confirmado');
+            if(data.nome && data.nome.length > 0){
+              this.avaliacao.avaliadorReal = data.nome;
+              this.apiUfsmProvider.setAvaliacao(this.avaliacao).then(()=> {
+                this.presentToast('Avaliação enviada com sucesso.');
+                this.navCtrl.pop();
+              }, err => {
+                this.presentToast('Não foi possível enviar a avaliação. Uma nova tentativa de envio será feita automaticamente quando houver conexão a internet.');
+                this.navCtrl.pop();
+              });
+            }else{
+              this.presentToast('Nome inválido');
+            }
+          }
+        }
+      ]
+    });
+    return prompt;
+  }
+
   public slidesBack(){
     this.slides.slidePrev();
   }
@@ -140,7 +175,7 @@ export class QuestionsPage {
   }
 
   public slideTo(index: number){
-    this.slides.slideTo(index);
+    this.slides.slideTo(index + 1);
   }
 
   public slideChanged(){

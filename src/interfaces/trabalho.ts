@@ -5,6 +5,8 @@ export interface Trabalho{
     titulo: string,
     apresentador: string,
     evento: string,
+    dia: string,
+    horario: string,
     //apresentacao: {data: string, predio: string, sala:string},
     perguntas: Array<Pergunta>
 }

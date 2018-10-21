@@ -24,7 +24,10 @@
     <button ion-item *ngFor="let trabalho of trabalhos; let i = index" (click)="goToQuestions(trabalho)">
       <h2>{{trabalho.titulo}}</h2>
       <h3>{{trabalho.apresentador}}</h3>
-      <p *ngIf="estados">{{estados[i]}}</p>
+      <h3 *ngIf="trabalho.dia && trabalho.horario">{{trabalho.dia}} - {{trabalho.horario}}</h3>
+      <p *ngIf="estados && 'Não Avaliado' === estados[trabalho.id]" style="color:red">{{estados[trabalho.id]}}</p>
+      <p *ngIf="estados && 'Avaliado mas não enviado' === estados[trabalho.id]" style="color:yellow">{{estados[trabalho.id]}}</p>
+      <p *ngIf="estados && 'Avaliado e Enviado' === estados[trabalho.id]" style="color:green">{{estados[trabalho.id]}}</p>
     </button>
   </ion-list>
 </ion-content>

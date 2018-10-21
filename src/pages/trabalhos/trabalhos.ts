@@ -72,6 +72,7 @@ export class TrabalhosPage {
     this.localDataProvider.setTrabalhos(this.trabalhos).then(()=>{
       this.localDataProvider.setAvaliacoes(avaliacoes).then(()=>{
         this.localDataProvider.getEstados().then(estados => {
+          console.log(estados);
           this.estados = estados;
           loader.dismiss().catch(() => {});
         });

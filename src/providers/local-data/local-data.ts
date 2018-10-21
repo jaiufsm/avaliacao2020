@@ -75,10 +75,10 @@ export class LocalDataProvider {
   }
 
   public getEstados(){
-    let getEstadosPromise = new Promise<Array<string>>((resolve, reject) => {
-      let estados = new Array<string>();
+    let getEstadosPromise = new Promise<any>((resolve, reject) => {
+      let estados: { [trabalho: number]: string; } = {}
       this.ngf.iterate((value: Avaliacao, key, iterationNumber) => {
-        estados.push(Estado[value.estado]);
+        estados[value.trabalho] = Estado[value.estado];
       }).then(()=>{
         resolve(estados);
       }, err => {
