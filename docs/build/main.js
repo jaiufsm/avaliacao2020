@@ -57,7 +57,7 @@ var QuestionsPage = /** @class */ (function () {
                 this.questions = __WEBPACK_IMPORTED_MODULE_2__interfaces_pergunta__["a" /* Perguntas */].perguntasIC;
             }
             this.slidesIndex = 1;
-            this.slidesLength = this.questions.length + 1;
+            this.slidesLength = this.questions.length + 2;
             this.initQuestions();
             this.avaliacao = {
                 trabalho: this.trabalho.id,
@@ -95,7 +95,6 @@ var QuestionsPage = /** @class */ (function () {
         }
     };
     QuestionsPage.prototype.setAvaliacao = function () {
-        var _this = this;
         this.slides.getActiveIndex();
         console.log('setavaliacao');
         var respostasPendentes = 0;
@@ -105,14 +104,8 @@ var QuestionsPage = /** @class */ (function () {
             }
         }
         if (respostasPendentes == 0) {
-            this.avaliacao.avaliadorReal = "teste";
-            this.apiUfsmProvider.setAvaliacao(this.avaliacao).then(function () {
-                _this.presentToast('Avaliação enviada com sucesso.');
-                _this.navCtrl.pop();
-            }, function (err) {
-                _this.presentToast('Não foi possível enviar a avaliação. Uma nova tentativa de envio será feita automaticamente quando houver conexão a internet.');
-                _this.navCtrl.pop();
-            });
+            var prompt_1 = this.showPromptAlert();
+            prompt_1.present();
         }
         else {
             this.showAlert('Responda todas as perguntas', '');
@@ -134,6 +127,48 @@ var QuestionsPage = /** @class */ (function () {
         });
         alert.present();
     };
+    QuestionsPage.prototype.showPromptAlert = function () {
+        var _this = this;
+        var prompt = this.alertCtrl.create({
+            title: "Avaliador",
+            message: "Digite o nome de quem está fazendo a avaliação",
+            inputs: [
+                {
+                    name: 'nome',
+                    placeholder: 'Nome'
+                }
+            ],
+            buttons: [
+                {
+                    text: 'Cancelar',
+                    role: 'cancel',
+                    handler: function (data) {
+                        console.log('Cancelado');
+                    }
+                },
+                {
+                    text: 'Confirmar',
+                    handler: function (data) {
+                        console.log('Confirmado');
+                        if (data.nome && data.nome.length > 0) {
+                            _this.avaliacao.avaliadorReal = data.nome;
+                            _this.apiUfsmProvider.setAvaliacao(_this.avaliacao).then(function () {
+                                _this.presentToast('Avaliação enviada com sucesso.');
+                                _this.navCtrl.pop();
+                            }, function (err) {
+                                _this.presentToast('Não foi possível enviar a avaliação. Uma nova tentativa de envio será feita automaticamente quando houver conexão a internet.');
+                                _this.navCtrl.pop();
+                            });
+                        }
+                        else {
+                            _this.presentToast('Nome inválido');
+                        }
+                    }
+                }
+            ]
+        });
+        return prompt;
+    };
     QuestionsPage.prototype.slidesBack = function () {
         this.slides.slidePrev();
     };
@@ -141,23 +176,23 @@ var QuestionsPage = /** @class */ (function () {
         this.slides.slideNext();
     };
     QuestionsPage.prototype.slideTo = function (index) {
-        this.slides.slideTo(index);
+        this.slides.slideTo(index + 1);
     };
     QuestionsPage.prototype.slideChanged = function () {
         this.slidesIndex = this.slides.getActiveIndex() + 1;
     };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_8" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* Slides */]),
-        __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* Slides */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* Slides */]) === "function" && _a || Object)
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* Slides */])
     ], QuestionsPage.prototype, "slides", void 0);
     QuestionsPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-questions',template:/*ion-inline-start:"C:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\questions\questions.html"*/'<!--\n  Generated template for the QuestionsPage page.\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n  Ionic pages and navigation.\n-->\n<ion-header>\n\n  <ion-navbar color="primary">\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Perguntas</ion-title>\n  </ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n  <ion-slides (ionSlideDidChange)="slideChanged()">\n    <ion-slide *ngFor="let question of questions; let i = index">\n      <h2>{{question.nome}}</h2>\n      <ion-textarea *ngIf="question.tipo == 1" placeholder="Resposta" [(ngModel)]="avaliacao.respostas[i]"></ion-textarea>\n      <ion-range *ngIf="question.tipo == 2" [(ngModel)]="avaliacao.respostas[i]" min="0" max="5" pin="true" snaps="true"></ion-range>\n      <ion-list *ngIf="question.tipo == 3" radio-group [(ngModel)]="avaliacao.respostas[i]">\n        <ion-item *ngFor="let resposta of question.listaRespostas">\n          <ion-label>{{resposta}}</ion-label>\n          <ion-radio value="{{resposta}}"></ion-radio>\n        </ion-item>\n      </ion-list>\n    </ion-slide>\n    <ion-slide>\n      <h2>Respostas:</h2>\n      <ion-list>\n        <ion-item text-wrap *ngFor="let question of questions; let i = index" (click)="slideTo(i)">\n          <h2>{{question.nome}}</h2>\n          <p>{{avaliacao.respostas[i]}}</p>\n          <p *ngIf="!avaliacao.respostas[i]" style="color:red">Não respondido</p>\n        </ion-item>\n      </ion-list>\n    </ion-slide>\n  </ion-slides>\n\n</ion-content>\n\n<ion-footer *ngIf="!keyboard.isOpen()">\n    <ion-toolbar color="primary">\n      <ion-title>{{slidesIndex}}/{{slidesLength}}</ion-title>\n      <ion-buttons end>\n        <button ion-button outline *ngIf="slidesIndex == slidesLength" (click)="setAvaliacao($event)">Enviar Respostas</button>\n        <button ion-button icon-only (click)="slidesBack()">\n          <ion-icon name="arrow-back"></ion-icon>\n        </button>\n        <button ion-button icon-only (click)="slidesForward()">\n          <ion-icon name="arrow-forward"></ion-icon>\n        </button>\n      </ion-buttons>\n    </ion-toolbar>\n</ion-footer>\n\n'/*ion-inline-end:"C:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\questions\questions.html"*/,
+            selector: 'page-questions',template:/*ion-inline-start:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\questions\questions.html"*/'<!--\n  Generated template for the QuestionsPage page.\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n  Ionic pages and navigation.\n-->\n<ion-header>\n\n  <ion-navbar color="primary">\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Perguntas</ion-title>\n  </ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n  <ion-slides (ionSlideDidChange)="slideChanged()">\n    <ion-slide>\n      <h3>{{trabalho.titulo}}</h3>\n      <p>Apresentador: {{trabalho.apresentador}}</p>\n      <p>Evento: {{trabalho.evento}}</p>\n      <p>Data: {{trabalho.dia}} - {{trabalho.horario}}</p>\n    </ion-slide>\n    <ion-slide *ngFor="let question of questions; let i = index">\n      <h3>{{question.nome}}</h3>\n      <ion-textarea *ngIf="question.tipo == 1" placeholder="Resposta" [(ngModel)]="avaliacao.respostas[i]"></ion-textarea>\n      <ion-range *ngIf="question.tipo == 2" [(ngModel)]="avaliacao.respostas[i]" min="0" max="5" pin="true" snaps="true"></ion-range>\n      <ion-list *ngIf="question.tipo == 3" radio-group [(ngModel)]="avaliacao.respostas[i]">\n        <ion-item *ngFor="let resposta of question.listaRespostas">\n          <ion-label>{{resposta}}</ion-label>\n          <ion-radio value="{{resposta}}"></ion-radio>\n        </ion-item>\n      </ion-list>\n    </ion-slide>\n    <ion-slide>\n      <p>{{trabalho.titulo}}</p>\n      <p>{{trabalho.apresentador}}</p>\n      <h2>Respostas:</h2>\n      <ion-list>\n        <ion-item text-wrap *ngFor="let question of questions; let i = index" (click)="slideTo(i)">\n          <h2>{{question.nome}}</h2>\n          <p>{{avaliacao.respostas[i]}}</p>\n          <p *ngIf="!avaliacao.respostas[i]" style="color:red">Não respondido</p>\n        </ion-item>\n      </ion-list>\n    </ion-slide>\n  </ion-slides>\n\n</ion-content>\n\n<ion-footer *ngIf="!keyboard.isOpen()">\n    <ion-toolbar color="primary">\n      <ion-title>{{slidesIndex}}/{{slidesLength}}</ion-title>\n      <ion-buttons end>\n        <button ion-button outline *ngIf="slidesIndex == slidesLength" (click)="setAvaliacao($event)">Enviar Respostas</button>\n        <button ion-button icon-only *ngIf="slidesIndex > 1" (click)="slidesBack()">\n          <ion-icon name="arrow-back"></ion-icon>\n        </button>\n        <button ion-button icon-only *ngIf="slidesIndex < slidesLength" (click)="slidesForward()">\n          <ion-icon name="arrow-forward"></ion-icon>\n        </button>\n      </ion-buttons>\n    </ion-toolbar>\n</ion-footer>\n\n'/*ion-inline-end:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\questions\questions.html"*/,
         }),
-        __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["m" /* ToastController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["m" /* ToastController */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* Keyboard */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* Keyboard */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_4__providers_local_data_local_data__["a" /* LocalDataProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__providers_local_data_local_data__["a" /* LocalDataProvider */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_5__providers_api_ufsm_api_ufsm__["a" /* ApiUfsmProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__providers_api_ufsm_api_ufsm__["a" /* ApiUfsmProvider */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */]) === "function" && _h || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["m" /* ToastController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* Keyboard */],
+            __WEBPACK_IMPORTED_MODULE_4__providers_local_data_local_data__["a" /* LocalDataProvider */], __WEBPACK_IMPORTED_MODULE_5__providers_api_ufsm_api_ufsm__["a" /* ApiUfsmProvider */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */]])
     ], QuestionsPage);
     return QuestionsPage;
-    var _a, _b, _c, _d, _e, _f, _g, _h;
 }());
 
 //# sourceMappingURL=questions.js.map
@@ -238,7 +273,7 @@ var HomePage = /** @class */ (function () {
     }
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"C:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\home\home.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Home</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <h3>Ionic Menu Starter</h3>\n\n  <p>\n    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.\n  </p>\n\n  <button ion-button secondary menuToggle>Toggle Menu</button>\n</ion-content>\n'/*ion-inline-end:"C:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\home\home.html"*/
+            selector: 'page-home',template:/*ion-inline-start:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\home\home.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Home</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <h3>Ionic Menu Starter</h3>\n\n  <p>\n    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.\n  </p>\n\n  <button ion-button secondary menuToggle>Toggle Menu</button>\n</ion-content>\n'/*ion-inline-end:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\home\home.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */]])
     ], HomePage);
@@ -294,7 +329,7 @@ var ListPage = /** @class */ (function () {
     };
     ListPage = ListPage_1 = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-list',template:/*ion-inline-start:"C:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\list\list.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>List</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <ion-list>\n    <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">\n      <ion-icon [name]="item.icon" item-start></ion-icon>\n      {{item.title}}\n      <div class="item-note" item-end>\n        {{item.note}}\n      </div>\n    </button>\n  </ion-list>\n  <div *ngIf="selectedItem" padding>\n    You navigated here from <b>{{selectedItem.title}}</b>\n  </div>\n</ion-content>\n'/*ion-inline-end:"C:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\list\list.html"*/
+            selector: 'page-list',template:/*ion-inline-start:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\list\list.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>List</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <ion-list>\n    <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">\n      <ion-icon [name]="item.icon" item-start></ion-icon>\n      {{item.title}}\n      <div class="item-note" item-end>\n        {{item.note}}\n      </div>\n    </button>\n  </ion-list>\n  <div *ngIf="selectedItem" padding>\n    You navigated here from <b>{{selectedItem.title}}</b>\n  </div>\n</ion-content>\n'/*ion-inline-end:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\list\list.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */]])
     ], ListPage);
@@ -424,61 +459,61 @@ var Perguntas = /** @class */ (function () {
             "discursiva": false,
             "id": 101,
             "nome": "1) O título do trabalho reflete seu conteúdo e as palavras usadas são adequadas?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 102,
             "nome": "2) O tema do trabalho é relevante na sua respectiva área do conhecimento?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 103,
             "nome": "3) A contextualização do trabalho com a literatura e/ou processos criativos existentes é feita de forma satisfatória?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 104,
             "nome": "4) A metodologia empregada no trabalho reflete o atual estado da arte na sua respectiva área do conhecimento?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 105,
             "nome": "5) Os resultados são apresentados de forma clara, estruturada e coerente, utilizando-se dos meios adequados (tabelas, gráficos, etc.)?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 106,
             "nome": "6) A discussão dos resultados enfatizou seus aspectos mais relevantes e suas limitações?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 107,
             "nome": "7) As conclusões do trabalho são coerentes com seus resultados, métodos e objetivos?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 108,
             "nome": "8) O pôster ou os slides continham as informações necessárias de forma sintética e objetiva?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 109,
             "nome": "9) O apresentador domina o conteúdo do trabalho apresentado?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 110,
             "nome": "10) Qual conceito o(a) Sr(a) daria para o trabalho/apresentador como um todo?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         }
     ];
     Perguntas.perguntasExt = [
@@ -486,61 +521,61 @@ var Perguntas = /** @class */ (function () {
             "discursiva": false,
             "id": 101,
             "nome": "1) O título do trabalho reflete seu conteúdo e as palavras usadas são adequadas?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 102,
             "nome": "2) O tema do trabalho é relevante na sua respectiva área do conhecimento e/ou apresenta possibilidade de trabalho interdisciplinar com outras áreas?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 103,
             "nome": "3) A proposta do trabalho compromete-se com as demandas da sociedade, promovendo intercâmbio de experiências e saberes entre Universidade e demais setores da sociedade?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 104,
             "nome": "4) As ações realizadas contribuem com: inclusão de grupos sociais; desenvolvimento de meios e processos de produção; inovação e construção de conhecimento; ou à ampliação de oportunidades educacionais e formativas?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 105,
             "nome": "5) Os resultados são apresentados de forma clara, estruturada e coerente, utilizando-se dos meios adequados?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 106,
             "nome": "6) A sistematização dos resultados enfatizou seus aspectos mais relevantes e suas limitações?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 107,
             "nome": "7) As conclusões do trabalho são coerentes com seus objetivos, ações e resultados?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 108,
             "nome": "8) O pôster ou os slides continham as informações necessárias de forma sintética e objetiva?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 109,
             "nome": "9) O apresentador domina o conteúdo do trabalho apresentado?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         },
         {
             "discursiva": false,
             "id": 110,
             "nome": "10) Qual nota o(a) Sr(a) daria para o trabalho/apresentador como um todo?",
-            "respostas": "A;B;C;D;E"
+            "respostas": "A - Melhor;B;C;D;E - Pior"
         }
     ];
     return Perguntas;
@@ -613,7 +648,7 @@ var MyApp = /** @class */ (function () {
         __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Nav */])
     ], MyApp.prototype, "nav", void 0);
     MyApp = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"C:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\app\app.html"*/'<ion-menu [content]="content">\n  <ion-header>\n    <ion-toolbar color="primary">\n      <ion-title>Menu</ion-title>\n    </ion-toolbar>\n  </ion-header>\n\n  <ion-content>\n    <ion-list>\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n        {{p.title}}\n      </button>\n    </ion-list>\n  </ion-content>\n\n</ion-menu>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"C:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\app\app.html"*/
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\app\app.html"*/'<ion-menu [content]="content">\n  <ion-header>\n    <ion-toolbar color="primary">\n      <ion-title>Menu</ion-title>\n    </ion-toolbar>\n  </ion-header>\n\n  <ion-content>\n    <ion-list>\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n        {{p.title}}\n      </button>\n    </ion-list>\n  </ion-content>\n\n</ion-menu>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\app\app.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]])
     ], MyApp);
@@ -723,9 +758,9 @@ var LocalDataProvider = /** @class */ (function () {
     LocalDataProvider.prototype.getEstados = function () {
         var _this = this;
         var getEstadosPromise = new Promise(function (resolve, reject) {
-            var estados = new Array();
+            var estados = {};
             _this.ngf.iterate(function (value, key, iterationNumber) {
-                estados.push(__WEBPACK_IMPORTED_MODULE_3__interfaces_avaliacao__["a" /* Estado */][value.estado]);
+                estados[value.trabalho] = __WEBPACK_IMPORTED_MODULE_3__interfaces_avaliacao__["a" /* Estado */][value.estado];
             }).then(function () {
                 resolve(estados);
             }, function (err) {
@@ -774,17 +809,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * Ionic pages and navigation.
  */
 var LoginPage = /** @class */ (function () {
-    function LoginPage(navCtrl, navParams, alertCtrl, http) {
+    function LoginPage(navCtrl, navParams, alertCtrl, http, loadingCtrl) {
         this.navCtrl = navCtrl;
         this.navParams = navParams;
         this.alertCtrl = alertCtrl;
         this.http = http;
+        this.loadingCtrl = loadingCtrl;
     }
     LoginPage.prototype.ionViewDidLoad = function () {
         console.log('ionViewDidLoad LoginPage');
     };
     LoginPage.prototype.doLogin = function () {
         var _this = this;
+        var loader = this.loadingCtrl.create({
+            content: "Carregando...",
+            duration: 30000
+        });
+        loader.present();
         var url = "https://jai-ufsm.herokuapp.com/jai/avaliacaoRest/login";
         //let url = "http://127.0.0.1:5000/jai/avaliacaoRest/login";
         var body = {
@@ -794,18 +835,22 @@ var LoginPage = /** @class */ (function () {
         var postLogin = this.http.post(url, body);
         postLogin.subscribe(function (response) {
             if (response.success) {
+                loader.dismiss().catch(function () { });
                 var data = { nome: response.nome, trabalhos: response.trabalhos };
                 _this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_3__trabalhos_trabalhos__["a" /* TrabalhosPage */], data);
             }
             else {
+                loader.dismiss().catch(function () { });
                 _this.showAlert("Erro ao entrar", response.erro);
             }
         }, function (err) {
             console.log(err);
             if (!navigator.onLine) {
+                loader.dismiss().catch(function () { });
                 _this.showAlert("Erro ao entrar", "Não há conexão com a internet");
             }
             else {
+                loader.dismiss().catch(function () { });
                 _this.showAlert("Erro ao entrar", "Tente novamente mais tarde");
             }
         });
@@ -820,9 +865,9 @@ var LoginPage = /** @class */ (function () {
     };
     LoginPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-login',template:/*ion-inline-start:"C:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\login\login.html"*/'<!--\n\n  Generated template for the LoginPage page.\n\n\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n\n  Ionic pages and navigation.\n\n-->\n\n<ion-header>\n\n\n\n  <ion-navbar color="primary">\n\n    <ion-title>Login</ion-title>\n\n  </ion-navbar>\n\n\n\n</ion-header>\n\n\n\n\n\n<ion-content padding>\n\n  <ion-grid>\n\n    <ion-row>\n\n        <ion-item>\n\n          <ion-label color="primary" stacked>Usuário</ion-label>\n\n          <ion-input type="text" placeholder="Usuário" [(ngModel)]="login"></ion-input>\n\n        </ion-item>\n\n    </ion-row>\n\n    <ion-row>\n\n        <ion-item>\n\n          <ion-label color="primary" stacked>Senha</ion-label>\n\n          <ion-input type="password" placeholder="Senha" [(ngModel)]="password"></ion-input>\n\n        </ion-item>\n\n    </ion-row>\n\n    <ion-row></ion-row>\n\n    <ion-row justify-content-center>\n\n      <button ion-button round (click)="doLogin()">Entrar</button>\n\n    </ion-row>\n\n  </ion-grid>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\login\login.html"*/,
+            selector: 'page-login',template:/*ion-inline-start:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\login\login.html"*/'<!--\n\n  Generated template for the LoginPage page.\n\n\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n\n  Ionic pages and navigation.\n\n-->\n\n<ion-header>\n\n\n\n  <ion-navbar color="primary">\n\n    <ion-title>Login</ion-title>\n\n  </ion-navbar>\n\n\n\n</ion-header>\n\n\n\n\n\n<ion-content padding>\n\n  <ion-grid>\n\n    <ion-row>\n\n        <ion-item>\n\n          <ion-label color="primary" stacked>Usuário</ion-label>\n\n          <ion-input type="text" placeholder="Usuário" [(ngModel)]="login"></ion-input>\n\n        </ion-item>\n\n    </ion-row>\n\n    <ion-row>\n\n        <ion-item>\n\n          <ion-label color="primary" stacked>Senha</ion-label>\n\n          <ion-input type="password" placeholder="Senha" [(ngModel)]="password"></ion-input>\n\n        </ion-item>\n\n    </ion-row>\n\n    <ion-row></ion-row>\n\n    <ion-row justify-content-center>\n\n      <button ion-button round (click)="doLogin()">Entrar</button>\n\n    </ion-row>\n\n  </ion-grid>\n\n</ion-content>\n\n'/*ion-inline-end:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\login\login.html"*/,
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */], __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["a" /* HttpClient */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */], __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["a" /* HttpClient */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* LoadingController */]])
     ], LoginPage);
     return LoginPage;
 }());
@@ -916,6 +961,7 @@ var TrabalhosPage = /** @class */ (function () {
         this.localDataProvider.setTrabalhos(this.trabalhos).then(function () {
             _this.localDataProvider.setAvaliacoes(avaliacoes).then(function () {
                 _this.localDataProvider.getEstados().then(function (estados) {
+                    console.log(estados);
                     _this.estados = estados;
                     loader.dismiss().catch(function () { });
                 });
@@ -936,12 +982,15 @@ var TrabalhosPage = /** @class */ (function () {
     };
     TrabalhosPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-trabalhos',template:/*ion-inline-start:"C:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\trabalhos\trabalhos.html"*/'<!--\n\n  Generated template for the TrabalhosPage page.\n\n\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n\n  Ionic pages and navigation.\n\n-->\n\n<ion-header>\n\n\n\n  <ion-navbar color="primary">\n\n    <ion-title>Trabalhos</ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-end (click)="doLogout()">\n\n        Sair\n\n        <ion-icon name="log-out"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n</ion-header>\n\n\n\n\n\n<ion-content padding>\n\n  <ion-list>\n\n    <button ion-item *ngFor="let trabalho of trabalhos; let i = index" (click)="goToQuestions(trabalho)">\n\n      <h2>{{trabalho.titulo}}</h2>\n\n      <h3>{{trabalho.apresentador}}</h3>\n\n      <p *ngIf="estados">{{estados[i]}}</p>\n\n    </button>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\trabalhos\trabalhos.html"*/,
+            selector: 'page-trabalhos',template:/*ion-inline-start:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\trabalhos\trabalhos.html"*/'<!--\n\n  Generated template for the TrabalhosPage page.\n\n\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n\n  Ionic pages and navigation.\n\n-->\n\n<ion-header>\n\n\n\n  <ion-navbar color="primary">\n\n    <ion-title>Trabalhos</ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-end (click)="doLogout()">\n\n        Sair\n\n        <ion-icon name="log-out"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n</ion-header>\n\n\n\n\n\n<ion-content padding>\n\n  <ion-list>\n\n    <button ion-item *ngFor="let trabalho of trabalhos; let i = index" (click)="goToQuestions(trabalho)">\n\n      <h2>{{trabalho.titulo}}</h2>\n\n      <h3>{{trabalho.apresentador}}</h3>\n\n      <h3 *ngIf="trabalho.dia && trabalho.horario">{{trabalho.dia}} - {{trabalho.horario}}</h3>\n\n      <p *ngIf="estados && \'Não Avaliado\' === estados[trabalho.id]" style="color:red">{{estados[trabalho.id]}}</p>\n\n      <p *ngIf="estados && \'Avaliado mas não enviado\' === estados[trabalho.id]" style="color:yellow">{{estados[trabalho.id]}}</p>\n\n      <p *ngIf="estados && \'Avaliado e Enviado\' === estados[trabalho.id]" style="color:green">{{estados[trabalho.id]}}</p>\n\n    </button>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\trabalhos\trabalhos.html"*/,
         }),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__providers_api_ufsm_api_ufsm__["a" /* ApiUfsmProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__providers_api_ufsm_api_ufsm__["a" /* ApiUfsmProvider */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_5__providers_local_data_local_data__["a" /* LocalDataProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__providers_local_data_local_data__["a" /* LocalDataProvider */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* LoadingController */]) === "function" && _e || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */],
+            __WEBPACK_IMPORTED_MODULE_4__providers_api_ufsm_api_ufsm__["a" /* ApiUfsmProvider */],
+            __WEBPACK_IMPORTED_MODULE_5__providers_local_data_local_data__["a" /* LocalDataProvider */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* LoadingController */]])
     ], TrabalhosPage);
     return TrabalhosPage;
-    var _a, _b, _c, _d, _e;
 }());
 
 //# sourceMappingURL=trabalhos.js.map
@@ -1054,21 +1103,36 @@ var ApiUfsmProvider = /** @class */ (function () {
                 /// Begin googleForms test
                 var formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfc1V0zMpY4E49ZfPT6g7ok0oZ707fAZH_V9VgCjqLbuyvAjg/formResponse";
                 var respostas = avaliacao.respostas;
-                var formBody = "";
+                var formBody = new FormData();
+                formBody.append("entry.931167567", respostas[0]);
+                formBody.append("entry.1091362213", respostas[1]);
+                formBody.append("entry.459559554", respostas[2]);
+                formBody.append("entry.1977341862", respostas[3]);
+                formBody.append("entry.673029848", respostas[4]);
+                formBody.append("entry.1465874438", respostas[5]);
+                formBody.append("entry.1043619085", respostas[6]);
+                formBody.append("entry.667784152", respostas[7]);
+                formBody.append("entry.339752743", respostas[8]);
+                formBody.append("entry.1977078333", respostas[9]);
+                formBody.append("entry.291279887", avaliacao.tituloTrabalho);
+                formBody.append("entry.1952743550", avaliacao.avaliador);
+                formBody.append("entry.1725844449", avaliacao.avaliadorReal);
                 //respostas
+                /*
                 formBody += "entry.931167567=" + respostas[0]
-                    + "&entry.1091362213=" + respostas[1]
-                    + "&entry.459559554=" + respostas[2]
-                    + "&entry.1977341862=" + respostas[3]
-                    + "&entry.673029848=" + respostas[4]
-                    + "&entry.1465874438=" + respostas[5]
-                    + "&entry.1043619085=" + respostas[6]
-                    + "&entry.667784152=" + respostas[7]
-                    + "&entry.339752743=" + respostas[8]
-                    + "&entry.1977078333=" + respostas[9]
-                    + "&entry.291279887=" + avaliacao.tituloTrabalho
-                    + "&entry.1952743550=" + avaliacao.avaliador
-                    + "&entry.1725844449=" + avaliacao.avaliadorReal;
+                  + "&entry.1091362213=" +  respostas[1]
+                  + "&entry.459559554=" + respostas[2]
+                  + "&entry.1977341862=" + respostas[3]
+                  + "&entry.673029848=" + respostas[4]
+                  + "&entry.1465874438=" + respostas[5]
+                  + "&entry.1043619085=" + respostas[6]
+                  + "&entry.667784152=" + respostas[7]
+                  + "&entry.339752743=" + respostas[8]
+                  + "&entry.1977078333=" + respostas[9]
+                  + "&entry.291279887=" + avaliacao.tituloTrabalho
+                  + "&entry.1952743550=" + avaliacao.avaliador
+                  + "&entry.1725844449=" + avaliacao.avaliadorReal;
+                */
                 /*
                         let formBody = {
                           "entry.931167567":"testecomtypescript",
@@ -1087,11 +1151,11 @@ var ApiUfsmProvider = /** @class */ (function () {
                         };
                 */
                 // let formBody="entry.931167567=A&entry.1091362213=B&entry.459559554=C&entry.1977341862=D&entry.673029848=E&entry.1465874438=A&entry.1043619085=B&entry.667784152=3&entry.339752743=4&entry.1977078333=5&entry.291279887=trab&entry.1952743550=aval&entry.1725844449=eu"
-                var headers = new __WEBPACK_IMPORTED_MODULE_0__angular_common_http__["c" /* HttpHeaders */]({
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                });
-                var options = { headers: headers };
-                var postOnGoogleForms = _this.http.post(formUrl, formBody, options);
+                /*let headers = new HttpHeaders({
+                  'Content-Type': 'application/x-www-form-urlencoded'});
+                
+                let options = { headers: headers };*/
+                var postOnGoogleForms = _this.http.post(formUrl, formBody);
                 postOnGoogleForms.subscribe(function (response) {
                     if (response.success) {
                         console.log('postOnGoogleForms');
@@ -1144,10 +1208,9 @@ var ApiUfsmProvider = /** @class */ (function () {
     };
     ApiUfsmProvider = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["A" /* Injectable */])(),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_common_http__["a" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_common_http__["a" /* HttpClient */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__local_data_local_data__["a" /* LocalDataProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__local_data_local_data__["a" /* LocalDataProvider */]) === "function" && _b || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_common_http__["a" /* HttpClient */], __WEBPACK_IMPORTED_MODULE_4__local_data_local_data__["a" /* LocalDataProvider */]])
     ], ApiUfsmProvider);
     return ApiUfsmProvider;
-    var _a, _b;
 }());
 
 //# sourceMappingURL=api-ufsm.js.map
