@@ -19,8 +19,6 @@ import { LocalDataProvider } from '../providers/local-data/local-data';
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
-    ListPage,
     TrabalhosPage,
     QuestionsPage,
     LoginPage
@@ -34,8 +32,6 @@ import { LocalDataProvider } from '../providers/local-data/local-data';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage,
-    ListPage,
     TrabalhosPage,
     QuestionsPage,
     LoginPage

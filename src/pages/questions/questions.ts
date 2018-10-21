@@ -128,11 +128,12 @@ export class QuestionsPage {
   showPromptAlert(){
     let prompt = this.alertCtrl.create({
       title: "Avaliador",
-      message: "Digite o nome de quem está fazendo a avaliação",
+      message: "Confirme seu nome abaixo, substituindo-o se necessário",
       inputs: [
         {
           name: 'nome',
-          placeholder: 'Nome'
+          placeholder: 'Nome',
+          value: this.avaliacao.avaliador
         }
       ],
       buttons: [
