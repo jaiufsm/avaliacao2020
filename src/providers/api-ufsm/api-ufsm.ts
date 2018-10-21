@@ -40,7 +40,7 @@ export class ApiUfsmProvider {
       this.sendAvaliacoes();
     }
   }
-
+/*
   public getTrabalhos(){
     this.http.get(this.url).subscribe((response: JsonResponse) => {
       if(!response.error){
@@ -51,6 +51,8 @@ export class ApiUfsmProvider {
             if(!avaliacao){
               let avaliacao = {
                 trabalho: trabalhos[i].id,
+                tituloTrabalho: trabalhos[i].titulo,
+                avaliador: '',
                 estado: Estado["Não Avaliado"],
                 respostas: new Array<string>(trabalhos[i].perguntas.length)
               }
@@ -71,7 +73,7 @@ export class ApiUfsmProvider {
       this.getTrabalhosLocal();
     });
     return this.trabalhosObs;
-  }
+  }*/
 
   private getTrabalhosLocal(){
     this.localDataProvider.getTrabalhos().then(trabalhos => {
@@ -84,10 +86,25 @@ export class ApiUfsmProvider {
     let sendAvaliacao = new Promise((resolve, reject) => {
       if(navigator.onLine){
         console.log('online');
-        avaliacao.estado = Estado["Avaliado e Enviado"];
 
         /// Begin googleForms test
         let formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfc1V0zMpY4E49ZfPT6g7ok0oZ707fAZH_V9VgCjqLbuyvAjg/formResponse";
+        let respostas = avaliacao.respostas;
+        let formBody = "";
+        //respostas
+        formBody += "entry.931167567=" + respostas[0]
+          + "&entry.1091362213=" +  respostas[1]
+          + "&entry.459559554=" + respostas[2]
+          + "&entry.1977341862=" + respostas[3]
+          + "&entry.673029848=" + respostas[4]
+          + "&entry.1465874438=" + respostas[5]
+          + "&entry.1043619085=" + respostas[6]
+          + "&entry.667784152=" + respostas[7]
+          + "&entry.339752743=" + respostas[8]
+          + "&entry.1977078333=" + respostas[9]
+          + "&entry.291279887=" + avaliacao.tituloTrabalho
+          + "&entry.1952743550=" + avaliacao.avaliador
+          + "&entry.1725844449=" + avaliacao.avaliadorReal;
 /*
         let formBody = {
           "entry.931167567":"testecomtypescript",
@@ -105,7 +122,7 @@ export class ApiUfsmProvider {
           "entry.1725844449":"eu"
         };
 */
-        let formBody="entry.931167567=A&entry.1091362213=B&entry.459559554=C&entry.1977341862=D&entry.673029848=E&entry.1465874438=A&entry.1043619085=B&entry.667784152=3&entry.339752743=4&entry.1977078333=5&entry.291279887=trab&entry.1952743550=aval&entry.1725844449=eu"
+       // let formBody="entry.931167567=A&entry.1091362213=B&entry.459559554=C&entry.1977341862=D&entry.673029848=E&entry.1465874438=A&entry.1043619085=B&entry.667784152=3&entry.339752743=4&entry.1977078333=5&entry.291279887=trab&entry.1952743550=aval&entry.1725844449=eu"
         let headers = new HttpHeaders({
           'Content-Type': 'application/x-www-form-urlencoded'});
         
@@ -121,25 +138,26 @@ export class ApiUfsmProvider {
           }
         }, err => {
           console.log(err);
-          if(!navigator.onLine){
-            console.log("Erro ao entrar: Não há conexão com a internet");
+          if(err.statusText == "Unknown Error"){
+            avaliacao.estado = Estado["Avaliado e Enviado"];
+            this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
+              console.log('success');
+              resolve();
+            }, err => {
+              console.log('erro');
+              console.log(err);
+            });
           }else{
-            console.log("Erro ao entrar: Tente novamente mais tarde");
+            console.log("Erro: Tente novamente mais tarde");
+            avaliacao.estado = Estado["Avaliado mas não enviado"];
+            this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
+              reject();
+            });
           }
       
-        });
-
-
+        }); 
         /// End GoogleForms test
-
-
-        this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
-          console.log('success');
-          resolve();
-        }, err => {
-          console.log('erro');
-          console.log(err);
-        });
+        
       }else{
         console.log('offline');
         avaliacao.estado = Estado["Avaliado mas não enviado"];

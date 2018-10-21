@@ -38,7 +38,6 @@
           <p *ngIf="!avaliacao.respostas[i]" style="color:red">Não respondido</p>
         </ion-item>
       </ion-list>
-      <button ion-button (click)="setAvaliacao($event)">Enviar Respostas</button>
     </ion-slide>
   </ion-slides>
 
@@ -46,13 +45,12 @@
 
 <ion-footer *ngIf="!keyboard.isOpen()">
     <ion-toolbar color="primary">
-      <ion-buttons start>
+      <ion-title>{{slidesIndex}}/{{slidesLength}}</ion-title>
+      <ion-buttons end>
+        <button ion-button outline *ngIf="slidesIndex == slidesLength" (click)="setAvaliacao($event)">Enviar Respostas</button>
         <button ion-button icon-only (click)="slidesBack()">
           <ion-icon name="arrow-back"></ion-icon>
         </button>
-      </ion-buttons>
-      <ion-title>{{slidesIndex}}/{{slidesLength}}</ion-title>
-      <ion-buttons end>
         <button ion-button icon-only (click)="slidesForward()">
           <ion-icon name="arrow-forward"></ion-icon>
         </button>

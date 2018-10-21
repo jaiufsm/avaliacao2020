@@ -1,5 +1,8 @@
 export interface Avaliacao{
     trabalho: number,
+    tituloTrabalho,
+    avaliador: string,
+    avaliadorReal?:string,
     respostas: Array<string>,
     estado: Estado
 }

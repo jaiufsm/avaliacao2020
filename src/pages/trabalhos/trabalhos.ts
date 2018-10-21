@@ -52,12 +52,16 @@ export class TrabalhosPage {
     });*/
     this.nome = this.navParams.get('nome');
     this.trabalhos = this.navParams.get('trabalhos');
+    console.log(this.nome);
+    console.log(this.trabalhos)
     let avaliacoes = new Array<Avaliacao>();
     for(let i = 0; i < this.trabalhos.length; i++){
       this.localDataProvider.getAvaliacao(this.trabalhos[i].id).then(avaliacao => {
         if(!avaliacao){
           let avaliacao = {
             trabalho: this.trabalhos[i].id,
+            tituloTrabalho: this.trabalhos[i].titulo,
+            avaliador: this.nome,
             estado: Estado["Não Avaliado"],
             respostas: new Array<string>(10)
           }
@@ -75,8 +79,14 @@ export class TrabalhosPage {
     });
   }
 
+  ionViewDidEnter(){
+    this.localDataProvider.getEstados().then(estados => {
+      this.estados = estados;
+    });
+  }
+
   goToQuestions(trabalho: Trabalho) {
-    this.navCtrl.push(QuestionsPage, { trabalho: trabalho });
+    this.navCtrl.push(QuestionsPage, { trabalho: trabalho, avaliador: this.nome });
   }
 
   doLogout(){

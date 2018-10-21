@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Slides, Keyboard, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Slides, Keyboard, ToastController, AlertController } from 'ionic-angular';
 import { Trabalho } from '../../interfaces/trabalho';
 import { Pergunta, Perguntas } from '../../interfaces/pergunta';
 import { Avaliacao, Estado } from '../../interfaces/avaliacao';
@@ -30,7 +30,7 @@ export class QuestionsPage {
   slidesLength: number;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController, public keyboard: Keyboard, 
-    private localDataProvider: LocalDataProvider, private apiUfsmProvider: ApiUfsmProvider) {
+    private localDataProvider: LocalDataProvider, private apiUfsmProvider: ApiUfsmProvider, public alertCtrl: AlertController) {
 
   }
 
@@ -41,6 +41,7 @@ export class QuestionsPage {
   ngOnInit(){
     if(this.navParams.data.trabalho){
       this.trabalho = this.navParams.data.trabalho;
+      let avaliador = this.navParams.data.avaliador;
       if(this.trabalho.evento.includes('Fórum Extensão Conta')){
         this.questions = Perguntas.perguntasExt;
       }else{
@@ -51,6 +52,8 @@ export class QuestionsPage {
       this.initQuestions();
       this.avaliacao = {
         trabalho: this.trabalho.id,
+        tituloTrabalho: this.trabalho.titulo,
+        avaliador: avaliador,
         estado: Estado["Não Avaliado"],
         respostas: new Array<string>(this.questions.length)
       };
@@ -89,13 +92,25 @@ export class QuestionsPage {
   public setAvaliacao(){
     this.slides.getActiveIndex();
     console.log('setavaliacao');
-    this.apiUfsmProvider.setAvaliacao(this.avaliacao).then(()=> {
-      this.presentToast('Avaliação enviada com sucesso.');
-      this.navCtrl.goToRoot({});
-    }, err => {
-      this.presentToast('Não foi possível enviar a avaliação. Uma nova tentativa de envio será feita automaticamente quando houver conexão a internet.');
-      this.navCtrl.goToRoot({});
-    });
+    let respostasPendentes = 0;
+    for(let i = 0; i < this.avaliacao.respostas.length; i++){
+      if(this.avaliacao.respostas[i] == undefined){
+        respostasPendentes += 1;
+      }
+    }
+    if(respostasPendentes == 0){
+      this.avaliacao.avaliadorReal = "teste";
+      this.apiUfsmProvider.setAvaliacao(this.avaliacao).then(()=> {
+        this.presentToast('Avaliação enviada com sucesso.');
+        this.navCtrl.pop();
+      }, err => {
+        this.presentToast('Não foi possível enviar a avaliação. Uma nova tentativa de envio será feita automaticamente quando houver conexão a internet.');
+        this.navCtrl.pop();
+      });
+    }else{
+      this.showAlert('Responda todas as perguntas', '');
+    }
+ 
   }
 
   private presentToast(message: string){
@@ -105,6 +120,15 @@ export class QuestionsPage {
       position: 'middle'
     });
     toast.present();
+  }
+
+  showAlert(title: string, subtitle: string) {
+    const alert = this.alertCtrl.create({
+      title: title,
+      subTitle: subtitle,
+      buttons: ['OK']
+    });
+    alert.present();
   }
 
   public slidesBack(){
