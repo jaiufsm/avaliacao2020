@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { TrabalhosPage } from '../trabalhos/trabalhos';
 
@@ -20,7 +20,7 @@ export class LoginPage {
   login: string;
   password: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public http: HttpClient) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public http: HttpClient, private loadingCtrl: LoadingController) {
   }
 
   ionViewDidLoad() {
@@ -28,6 +28,11 @@ export class LoginPage {
   }
 
   doLogin(){
+    let loader = this.loadingCtrl.create({
+      content: "Carregando...",
+      duration: 30000
+    });
+    loader.present();
     let url = "https://jai-ufsm.herokuapp.com/jai/avaliacaoRest/login";
     //let url = "http://127.0.0.1:5000/jai/avaliacaoRest/login";
     let body = {
@@ -37,16 +42,20 @@ export class LoginPage {
     let postLogin = this.http.post(url, body);
     postLogin.subscribe((response: loginResponse) => {
       if(response.success){
+        loader.dismiss().catch(() => {});
         let data = {nome: response.nome, trabalhos: response.trabalhos};
         this.navCtrl.setRoot(TrabalhosPage, data);
       }else{
+        loader.dismiss().catch(() => {});
         this.showAlert("Erro ao entrar", response.erro);
       }
     }, err => {
       console.log(err);
       if(!navigator.onLine){
+        loader.dismiss().catch(() => {});
         this.showAlert("Erro ao entrar", "Não há conexão com a internet");
       }else{
+        loader.dismiss().catch(() => {});
         this.showAlert("Erro ao entrar", "Tente novamente mais tarde");
       }
       
