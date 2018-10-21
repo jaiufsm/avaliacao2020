@@ -1,16 +1,137 @@
 webpackJsonp([3],{
 
+/***/ 105:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TrabalhosPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__questions_questions__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__interfaces_avaliacao__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_api_ufsm_api_ufsm__ = __webpack_require__(82);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_local_data_local_data__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__login_login__ = __webpack_require__(53);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+/**
+ * Generated class for the TrabalhosPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
+var TrabalhosPage = /** @class */ (function () {
+    function TrabalhosPage(navCtrl, navParams, apiUfsmProvider, localDataProvider, loadingCtrl) {
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.apiUfsmProvider = apiUfsmProvider;
+        this.localDataProvider = localDataProvider;
+        this.loadingCtrl = loadingCtrl;
+    }
+    TrabalhosPage.prototype.ionViewDidLoad = function () {
+        console.log('ionViewDidLoad TrabalhosPage');
+    };
+    TrabalhosPage.prototype.ngOnInit = function () {
+        var _this = this;
+        var loader = this.loadingCtrl.create({
+            content: "Carregando...",
+            duration: 10000
+        });
+        loader.present();
+        /*this.apiUfsmProvider.getTrabalhos().subscribe(trabalhos => {
+          this.trabalhos = trabalhos;
+          this.localDataProvider.getEstados().then(estados => {
+            this.estados = estados;
+            loader.dismiss().catch(() => {});
+          });
+        });*/
+        this.nome = this.navParams.get('nome');
+        this.trabalhos = this.navParams.get('trabalhos');
+        console.log(this.nome);
+        console.log(this.trabalhos);
+        var avaliacoes = new Array();
+        var _loop_1 = function (i) {
+            this_1.localDataProvider.getAvaliacao(this_1.trabalhos[i].id).then(function (avaliacao) {
+                if (!avaliacao) {
+                    var avaliacao_1 = {
+                        trabalho: _this.trabalhos[i].id,
+                        tituloTrabalho: _this.trabalhos[i].titulo,
+                        avaliador: _this.nome,
+                        estado: __WEBPACK_IMPORTED_MODULE_3__interfaces_avaliacao__["a" /* Estado */]["Não Avaliado"],
+                        respostas: new Array(10)
+                    };
+                    avaliacoes.push(avaliacao_1);
+                }
+            });
+        };
+        var this_1 = this;
+        for (var i = 0; i < this.trabalhos.length; i++) {
+            _loop_1(i);
+        }
+        this.localDataProvider.setTrabalhos(this.trabalhos).then(function () {
+            _this.localDataProvider.setAvaliacoes(avaliacoes).then(function () {
+                _this.localDataProvider.getEstados().then(function (estados) {
+                    console.log(estados);
+                    _this.estados = estados;
+                    loader.dismiss().catch(function () { });
+                });
+            });
+        });
+    };
+    TrabalhosPage.prototype.ionViewDidEnter = function () {
+        var _this = this;
+        this.localDataProvider.getEstados().then(function (estados) {
+            _this.estados = estados;
+        });
+    };
+    TrabalhosPage.prototype.goToQuestions = function (trabalho) {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__questions_questions__["a" /* QuestionsPage */], { trabalho: trabalho, avaliador: this.nome });
+    };
+    TrabalhosPage.prototype.doLogout = function () {
+        this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_6__login_login__["a" /* LoginPage */]);
+    };
+    TrabalhosPage = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
+            selector: 'page-trabalhos',template:/*ion-inline-start:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\trabalhos\trabalhos.html"*/'<!--\n\n  Generated template for the TrabalhosPage page.\n\n\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n\n  Ionic pages and navigation.\n\n-->\n\n<ion-header>\n\n\n\n  <ion-navbar color="primary">\n\n    <ion-title>Trabalhos</ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-end (click)="doLogout()">\n\n        Sair\n\n        <ion-icon name="log-out"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n</ion-header>\n\n\n\n\n\n<ion-content padding>\n\n  <ion-list>\n\n    <button ion-item *ngFor="let trabalho of trabalhos; let i = index" (click)="goToQuestions(trabalho)">\n\n      <h2>{{trabalho.titulo}}</h2>\n\n      <h3>{{trabalho.apresentador}}</h3>\n\n      <h3 *ngIf="trabalho.dia && trabalho.horario">{{trabalho.dia}} - {{trabalho.horario}}</h3>\n\n      <p *ngIf="estados && \'Não Avaliado\' === estados[trabalho.id]" style="color:red">{{estados[trabalho.id]}}</p>\n\n      <p *ngIf="estados && \'Avaliado mas não enviado\' === estados[trabalho.id]" style="color:yellow">{{estados[trabalho.id]}}</p>\n\n      <p *ngIf="estados && \'Avaliado e Enviado\' === estados[trabalho.id]" style="color:green">{{estados[trabalho.id]}}</p>\n\n    </button>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\trabalhos\trabalhos.html"*/,
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */],
+            __WEBPACK_IMPORTED_MODULE_4__providers_api_ufsm_api_ufsm__["a" /* ApiUfsmProvider */],
+            __WEBPACK_IMPORTED_MODULE_5__providers_local_data_local_data__["a" /* LocalDataProvider */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* LoadingController */]])
+    ], TrabalhosPage);
+    return TrabalhosPage;
+}());
+
+//# sourceMappingURL=trabalhos.js.map
+
+/***/ }),
+
 /***/ 106:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return QuestionsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__interfaces_pergunta__ = __webpack_require__(259);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__interfaces_pergunta__ = __webpack_require__(257);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__interfaces_avaliacao__ = __webpack_require__(47);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_local_data_local_data__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_api_ufsm_api_ufsm__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_api_ufsm_api_ufsm__ = __webpack_require__(82);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -104,8 +225,8 @@ var QuestionsPage = /** @class */ (function () {
             }
         }
         if (respostasPendentes == 0) {
-            var prompt = this.showPromptAlert();
-            prompt.present();
+            var prompt_1 = this.showPromptAlert();
+            prompt_1.present();
         }
         else {
             this.showAlert('Responda todas as perguntas', '');
@@ -184,16 +305,16 @@ var QuestionsPage = /** @class */ (function () {
     };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_8" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* Slides */]),
-        __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* Slides */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* Slides */]) === "function" && _a || Object)
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* Slides */])
     ], QuestionsPage.prototype, "slides", void 0);
     QuestionsPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
             selector: 'page-questions',template:/*ion-inline-start:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\questions\questions.html"*/'<!--\n\n  Generated template for the QuestionsPage page.\n\n\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n\n  Ionic pages and navigation.\n\n-->\n\n<ion-header>\n\n\n\n  <ion-navbar color="primary">\n\n    <button ion-button menuToggle>\n\n      <ion-icon name="menu"></ion-icon>\n\n    </button>\n\n    <ion-title>Perguntas</ion-title>\n\n  </ion-navbar>\n\n\n\n</ion-header>\n\n\n\n\n\n<ion-content padding>\n\n  <ion-slides (ionSlideDidChange)="slideChanged()">\n\n    <ion-slide>\n\n      <h3>{{trabalho.titulo}}</h3>\n\n      <p>Apresentador: {{trabalho.apresentador}}</p>\n\n      <p>Evento: {{trabalho.evento}}</p>\n\n      <p>Data: {{trabalho.dia}} - {{trabalho.horario}}</p>\n\n    </ion-slide>\n\n    <ion-slide *ngFor="let question of questions; let i = index">\n\n      <h3>{{question.nome}}</h3>\n\n      <ion-textarea *ngIf="question.tipo == 1" placeholder="Resposta" [(ngModel)]="avaliacao.respostas[i]"></ion-textarea>\n\n      <ion-range *ngIf="question.tipo == 2" [(ngModel)]="avaliacao.respostas[i]" min="0" max="5" pin="true" snaps="true"></ion-range>\n\n      <ion-list *ngIf="question.tipo == 3" radio-group [(ngModel)]="avaliacao.respostas[i]">\n\n        <ion-item *ngFor="let resposta of question.listaRespostas">\n\n          <ion-label>{{resposta}}</ion-label>\n\n          <ion-radio value="{{resposta}}"></ion-radio>\n\n        </ion-item>\n\n      </ion-list>\n\n    </ion-slide>\n\n    <ion-slide>\n\n      <p>{{trabalho.titulo}}</p>\n\n      <p>{{trabalho.apresentador}}</p>\n\n      <h2>Respostas:</h2>\n\n      <ion-list>\n\n        <ion-item text-wrap *ngFor="let question of questions; let i = index" (click)="slideTo(i)">\n\n          <h2>{{question.nome}}</h2>\n\n          <p>{{avaliacao.respostas[i]}}</p>\n\n          <p *ngIf="!avaliacao.respostas[i]" style="color:red">Não respondido</p>\n\n        </ion-item>\n\n      </ion-list>\n\n    </ion-slide>\n\n  </ion-slides>\n\n\n\n</ion-content>\n\n\n\n<ion-footer *ngIf="!keyboard.isOpen()">\n\n    <ion-toolbar color="primary">\n\n      <ion-title>{{slidesIndex}}/{{slidesLength}}</ion-title>\n\n      <ion-buttons end>\n\n        <button ion-button outline *ngIf="slidesIndex == slidesLength" (click)="setAvaliacao($event)">Enviar Respostas</button>\n\n        <button ion-button icon-only *ngIf="slidesIndex > 1" (click)="slidesBack()">\n\n          <ion-icon name="arrow-back"></ion-icon>\n\n        </button>\n\n        <button ion-button icon-only *ngIf="slidesIndex < slidesLength" (click)="slidesForward()">\n\n          <ion-icon name="arrow-forward"></ion-icon>\n\n        </button>\n\n      </ion-buttons>\n\n    </ion-toolbar>\n\n</ion-footer>\n\n\n\n'/*ion-inline-end:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\questions\questions.html"*/,
         }),
-        __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["m" /* ToastController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["m" /* ToastController */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* Keyboard */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* Keyboard */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_4__providers_local_data_local_data__["a" /* LocalDataProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__providers_local_data_local_data__["a" /* LocalDataProvider */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_5__providers_api_ufsm_api_ufsm__["a" /* ApiUfsmProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__providers_api_ufsm_api_ufsm__["a" /* ApiUfsmProvider */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */]) === "function" && _h || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["m" /* ToastController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* Keyboard */],
+            __WEBPACK_IMPORTED_MODULE_4__providers_local_data_local_data__["a" /* LocalDataProvider */], __WEBPACK_IMPORTED_MODULE_5__providers_api_ufsm_api_ufsm__["a" /* ApiUfsmProvider */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */]])
     ], QuestionsPage);
     return QuestionsPage;
-    var _a, _b, _c, _d, _e, _f, _g, _h;
 }());
 
 //# sourceMappingURL=questions.js.map
@@ -222,15 +343,15 @@ webpackEmptyAsyncContext.id = 118;
 
 var map = {
 	"../pages/login/login.module": [
-		288,
+		286,
 		2
 	],
 	"../pages/questions/questions.module": [
-		289,
+		287,
 		1
 	],
 	"../pages/trabalhos/trabalhos.module": [
-		290,
+		288,
 		0
 	]
 };
@@ -250,13 +371,13 @@ module.exports = webpackAsyncContext;
 
 /***/ }),
 
-/***/ 209:
+/***/ 207:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(210);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(229);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(208);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(227);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -264,23 +385,23 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 229:
+/***/ 227:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ngforage__ = __webpack_require__(161);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_common_http__ = __webpack_require__(46);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(282);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_trabalhos_trabalhos__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(280);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_trabalhos_trabalhos__ = __webpack_require__(105);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_questions_questions__ = __webpack_require__(106);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_login_login__ = __webpack_require__(53);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__ionic_native_status_bar__ = __webpack_require__(203);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_splash_screen__ = __webpack_require__(206);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__providers_api_ufsm_api_ufsm__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__providers_api_ufsm_api_ufsm__ = __webpack_require__(82);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__providers_local_data_local_data__ = __webpack_require__(48);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -347,7 +468,7 @@ var AppModule = /** @class */ (function () {
 
 /***/ }),
 
-/***/ 259:
+/***/ 257:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -486,13 +607,13 @@ var Perguntas = /** @class */ (function () {
 
 /***/ }),
 
-/***/ 282:
+/***/ 280:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(203);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(206);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_login_login__ = __webpack_require__(53);
@@ -534,15 +655,14 @@ var MyApp = /** @class */ (function () {
     };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_8" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Nav */]),
-        __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Nav */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Nav */]) === "function" && _a || Object)
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Nav */])
     ], MyApp.prototype, "nav", void 0);
     MyApp = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\app\app.html"*/'<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\app\app.html"*/
         }),
-        __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* Platform */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* Platform */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]) === "function" && _d || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]])
     ], MyApp);
     return MyApp;
-    var _a, _b, _c, _d;
 }());
 
 //# sourceMappingURL=app.component.js.map
@@ -676,9 +796,9 @@ var LocalDataProvider = /** @class */ (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common_http__ = __webpack_require__(46);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__trabalhos_trabalhos__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__trabalhos_trabalhos__ = __webpack_require__(105);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -766,128 +886,7 @@ var LoginPage = /** @class */ (function () {
 
 /***/ }),
 
-/***/ 54:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TrabalhosPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__questions_questions__ = __webpack_require__(106);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__interfaces_avaliacao__ = __webpack_require__(47);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_api_ufsm_api_ufsm__ = __webpack_require__(83);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__providers_local_data_local_data__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__login_login__ = __webpack_require__(53);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-
-/**
- * Generated class for the TrabalhosPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-var TrabalhosPage = /** @class */ (function () {
-    function TrabalhosPage(navCtrl, navParams, apiUfsmProvider, localDataProvider, loadingCtrl) {
-        this.navCtrl = navCtrl;
-        this.navParams = navParams;
-        this.apiUfsmProvider = apiUfsmProvider;
-        this.localDataProvider = localDataProvider;
-        this.loadingCtrl = loadingCtrl;
-    }
-    TrabalhosPage.prototype.ionViewDidLoad = function () {
-        console.log('ionViewDidLoad TrabalhosPage');
-    };
-    TrabalhosPage.prototype.ngOnInit = function () {
-        var _this = this;
-        var loader = this.loadingCtrl.create({
-            content: "Carregando...",
-            duration: 10000
-        });
-        loader.present();
-        /*this.apiUfsmProvider.getTrabalhos().subscribe(trabalhos => {
-          this.trabalhos = trabalhos;
-          this.localDataProvider.getEstados().then(estados => {
-            this.estados = estados;
-            loader.dismiss().catch(() => {});
-          });
-        });*/
-        this.nome = this.navParams.get('nome');
-        this.trabalhos = this.navParams.get('trabalhos');
-        console.log(this.nome);
-        console.log(this.trabalhos);
-        var avaliacoes = new Array();
-        var _loop_1 = function (i) {
-            this_1.localDataProvider.getAvaliacao(this_1.trabalhos[i].id).then(function (avaliacao) {
-                if (!avaliacao) {
-                    var avaliacao_1 = {
-                        trabalho: _this.trabalhos[i].id,
-                        tituloTrabalho: _this.trabalhos[i].titulo,
-                        avaliador: _this.nome,
-                        estado: __WEBPACK_IMPORTED_MODULE_3__interfaces_avaliacao__["a" /* Estado */]["Não Avaliado"],
-                        respostas: new Array(10)
-                    };
-                    avaliacoes.push(avaliacao_1);
-                }
-            });
-        };
-        var this_1 = this;
-        for (var i = 0; i < this.trabalhos.length; i++) {
-            _loop_1(i);
-        }
-        this.localDataProvider.setTrabalhos(this.trabalhos).then(function () {
-            _this.localDataProvider.setAvaliacoes(avaliacoes).then(function () {
-                _this.localDataProvider.getEstados().then(function (estados) {
-                    console.log(estados);
-                    _this.estados = estados;
-                    loader.dismiss().catch(function () { });
-                });
-            });
-        });
-    };
-    TrabalhosPage.prototype.ionViewDidEnter = function () {
-        var _this = this;
-        this.localDataProvider.getEstados().then(function (estados) {
-            _this.estados = estados;
-        });
-    };
-    TrabalhosPage.prototype.goToQuestions = function (trabalho) {
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__questions_questions__["a" /* QuestionsPage */], { trabalho: trabalho, avaliador: this.nome });
-    };
-    TrabalhosPage.prototype.doLogout = function () {
-        this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_6__login_login__["a" /* LoginPage */]);
-    };
-    TrabalhosPage = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-trabalhos',template:/*ion-inline-start:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\trabalhos\trabalhos.html"*/'<!--\n\n  Generated template for the TrabalhosPage page.\n\n\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n\n  Ionic pages and navigation.\n\n-->\n\n<ion-header>\n\n\n\n  <ion-navbar color="primary">\n\n    <ion-title>Trabalhos</ion-title>\n\n    <ion-buttons end>\n\n      <button ion-button icon-end (click)="doLogout()">\n\n        Sair\n\n        <ion-icon name="log-out"></ion-icon>\n\n      </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n\n\n</ion-header>\n\n\n\n\n\n<ion-content padding>\n\n  <ion-list>\n\n    <button ion-item *ngFor="let trabalho of trabalhos; let i = index" (click)="goToQuestions(trabalho)">\n\n      <h2>{{trabalho.titulo}}</h2>\n\n      <h3>{{trabalho.apresentador}}</h3>\n\n      <h3 *ngIf="trabalho.dia && trabalho.horario">{{trabalho.dia}} - {{trabalho.horario}}</h3>\n\n      <p *ngIf="estados && \'Não Avaliado\' === estados[trabalho.id]" style="color:red">{{estados[trabalho.id]}}</p>\n\n      <p *ngIf="estados && \'Avaliado mas não enviado\' === estados[trabalho.id]" style="color:yellow">{{estados[trabalho.id]}}</p>\n\n      <p *ngIf="estados && \'Avaliado e Enviado\' === estados[trabalho.id]" style="color:green">{{estados[trabalho.id]}}</p>\n\n    </button>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"c:\Users\felip\Documents\GitHub\pwa-jai-ufsm\src\pages\trabalhos\trabalhos.html"*/,
-        }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */],
-            __WEBPACK_IMPORTED_MODULE_4__providers_api_ufsm_api_ufsm__["a" /* ApiUfsmProvider */],
-            __WEBPACK_IMPORTED_MODULE_5__providers_local_data_local_data__["a" /* LocalDataProvider */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* LoadingController */]])
-    ], TrabalhosPage);
-    return TrabalhosPage;
-}());
-
-//# sourceMappingURL=trabalhos.js.map
-
-/***/ }),
-
-/***/ 83:
+/***/ 82:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -895,7 +894,7 @@ var TrabalhosPage = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_common_http__ = __webpack_require__(46);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__interfaces_avaliacao__ = __webpack_require__(47);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__ = __webpack_require__(263);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__ = __webpack_require__(261);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__local_data_local_data__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_observable_fromEvent__ = __webpack_require__(163);
@@ -1107,5 +1106,5 @@ var ApiUfsmProvider = /** @class */ (function () {
 
 /***/ })
 
-},[209]);
+},[207]);
 //# sourceMappingURL=main.js.map
