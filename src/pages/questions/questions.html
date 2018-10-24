@@ -55,7 +55,7 @@
     <ion-toolbar color="primary">
       <ion-title>{{slidesIndex}}/{{slidesLength}}</ion-title>
       <ion-buttons end>
-        <button ion-button outline *ngIf="slidesIndex == slidesLength" (click)="setAvaliacao($event)">Enviar Respostas</button>
+        <button ion-button *ngIf="slidesIndex == slidesLength" (click)="setAvaliacao($event)">Enviar</button>
         <button ion-button icon-only *ngIf="slidesIndex > 1" (click)="slidesBack()">
           <ion-icon name="arrow-back"></ion-icon>
         </button>
