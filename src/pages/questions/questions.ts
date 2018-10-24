@@ -13,7 +13,6 @@ import { ApiUfsmProvider } from '../../providers/api-ufsm/api-ufsm';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-questions',
   templateUrl: 'questions.html',

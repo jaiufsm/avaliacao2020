@@ -18,6 +18,8 @@ import { LocalDataProvider } from '../providers/local-data/local-data';
 
 @NgModule({
   declarations: [
+    HomePage,
+    ListPage,
     MyApp,
     TrabalhosPage,
     QuestionsPage,

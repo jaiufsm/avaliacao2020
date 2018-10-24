@@ -10,7 +10,6 @@ import { TrabalhosPage } from '../trabalhos/trabalhos';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
