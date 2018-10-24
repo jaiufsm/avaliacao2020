@@ -7,6 +7,9 @@ export interface Trabalho{
     evento: string,
     dia: string,
     horario: string,
+    predio: string,
+    sala?: string,
+    painel?: string,
     //apresentacao: {data: string, predio: string, sala:string},
     perguntas: Array<Pergunta>
 }
