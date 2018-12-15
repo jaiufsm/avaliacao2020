@@ -21,15 +21,33 @@
 
 <ion-content padding>
   <ion-list>
-    <button ion-item *ngFor="let trabalho of trabalhos; let i = index" (click)="goToQuestions(trabalho)">
-      <h2>{{trabalho.titulo}}</h2>
-      <h3>{{trabalho.apresentador}}</h3>
-      <h3 *ngIf="trabalho.dia && trabalho.horario">{{trabalho.dia}} - {{trabalho.horario}}</h3>
-      <h3 *ngIf="trabalho.sala">Oral - {{trabalho.predio}} - Sala {{trabalho.sala}}</h3>
-      <h3 *ngIf="trabalho.painel">Poster - {{trabalho.predio}} - Painel {{trabalho.painel}}</h3>
-      <p *ngIf="estados && 'Não Avaliado' === estados[trabalho.id]" style="color:red">{{estados[trabalho.id]}}</p>
-      <p *ngIf="estados && 'Avaliado mas não enviado' === estados[trabalho.id]" style="color:yellow">{{estados[trabalho.id]}}</p>
-      <p *ngIf="estados && 'Avaliado e Enviado' === estados[trabalho.id]" style="color:green">{{estados[trabalho.id]}}</p>
-    </button>
+    <ng-container *ngFor="let trabalho of trabalhos; let i = index">
+      <ion-card ion-item>
+          <ion-card-content>
+            <button ion-item (click)="goToQuestions(trabalho)">
+              <h2 text-wrap>{{trabalho.titulo}}</h2>
+              <h3 text-wrap>{{trabalho.apresentador}}</h3>
+              <h3 text-wrap *ngIf="trabalho.dia && trabalho.horario">{{trabalho.dia}} - {{trabalho.horario}}</h3>
+              <h3 text-wrap *ngIf="trabalho.sala">Oral - {{trabalho.predio}} - Sala {{trabalho.sala}}</h3>
+              <h3 text-wrap *ngIf="trabalho.painel">{{trabalho.predio}} - Painel {{trabalho.painel}}</h3>
+              <p *ngIf="estados && 'Não Avaliado' === estados[trabalho.id]" style="color:red">{{estados[trabalho.id]}}</p>
+              <p *ngIf="estados && 'Avaliado mas não enviado' === estados[trabalho.id]" style="color:yellow">{{estados[trabalho.id]}}</p>
+              <p *ngIf="estados && 'Avaliado e Enviado' === estados[trabalho.id]" style="color:green">{{estados[trabalho.id]}}</p>
+            </button>
+            <p>
+            <button ion-button color="dark" clear icon-start style="text-transform: none" (click)="setApresentadorAusente(trabalho, i)">
+              <ion-icon color="danger" [name]="trabalho.apresentadorAusente ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+              Apresentador ausente
+            </button>
+            </p>
+            <p>
+            <button ion-button color="dark" clear icon-start style="text-transform: none" (click)="setApresentadorSubst(trabalho)">
+              <ion-icon color="danger" [name]="trabalho.apresentadorSubstituto ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+              Apresentador substituto
+            </button>
+            </p>
+          </ion-card-content>
+      </ion-card>
+    </ng-container>
   </ion-list>
 </ion-content>

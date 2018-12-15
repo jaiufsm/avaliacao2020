@@ -10,6 +10,8 @@ export interface Trabalho{
     predio: string,
     sala?: string,
     painel?: string,
+    apresentadorAusente: boolean,
+    apresentadorSubstituto: string,
     //apresentacao: {data: string, predio: string, sala:string},
     perguntas: Array<Pergunta>
 }

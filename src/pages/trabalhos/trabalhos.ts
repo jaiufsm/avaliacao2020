@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
 import { QuestionsPage } from './../questions/questions';
 import { Trabalho } from '../../interfaces/trabalho';
 import { Avaliacao, Estado } from '../../interfaces/avaliacao';
@@ -29,7 +29,8 @@ export class TrabalhosPage {
     public navParams: NavParams, 
     public apiUfsmProvider: ApiUfsmProvider,
     public localDataProvider: LocalDataProvider,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController
   ) {}
 
   ionViewDidLoad() {
@@ -87,6 +88,52 @@ export class TrabalhosPage {
 
   goToQuestions(trabalho: Trabalho) {
     this.navCtrl.push(QuestionsPage, { trabalho: trabalho, avaliador: this.nome });
+  }
+
+  setApresentadorAusente(trabalho: Trabalho, i) {
+    // TODO: setar dados do trabalho para que as informações
+    // permaneçam ao sair e relogar
+    if (trabalho.apresentadorAusente) {
+        trabalho.apresentadorAusente = false;
+    } else trabalho.apresentadorAusente = true;
+
+    this.localDataProvider.setTrabalhos(this.trabalhos).then(()=>{
+        this.trabalhos[i] = trabalho;
+    });
+
+    console.log(this.trabalhos[i].apresentadorAusente);
+  }
+
+  setApresentadorSubst(trabalho: Trabalho) {
+    // TODO: setar dados do trabalho para que as informações
+    // permaneçam ao sair e relogar
+    const prompt = this.alertCtrl.create({
+      title: 'Número da matrícula',
+      message: "Insira o número da matrícula do apresentador substituto.",
+      inputs: [
+        {
+          name: 'matricula',
+          placeholder: 'Matrícula'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          handler: data => {
+            console.log("Atribuição cancelada");
+          }
+        },
+        {
+          text: 'Ok',
+          handler: data => {
+            console.log("Atribuição ok")
+            trabalho.apresentadorSubstituto = data;
+            console.log(trabalho.apresentadorSubstituto);
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 
   doLogout(){

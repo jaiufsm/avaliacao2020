@@ -36,6 +36,10 @@ export class LocalDataProvider {
     return this.ngf.setItem<T>(this.trabalhosDB, trabalhos);
   }
 
+  /*public setTrabalho<T = Trabalho>(id: number, trabalho: T){
+    return this.ngf.setItem<T>(String(id), trabalho);
+  }*/
+
   public getAvaliacao<T = Avaliacao>(id: number): Promise<T>{
     //this.ngf.storeName = 'avaliacoes';
     return this.ngf.getItem<T>(String(id));
