@@ -34,18 +34,6 @@
               <p *ngIf="estados && 'Avaliado mas não enviado' === estados[trabalho.id]" style="color:yellow">{{estados[trabalho.id]}}</p>
               <p *ngIf="estados && 'Avaliado e Enviado' === estados[trabalho.id]" style="color:green">{{estados[trabalho.id]}}</p>
             </button>
-            <p>
-            <button ion-button color="dark" clear icon-start style="text-transform: none" (click)="setApresentadorAusente(trabalho, i)">
-              <ion-icon color="danger" [name]="trabalho.apresentadorAusente ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
-              Apresentador ausente
-            </button>
-            </p>
-            <p>
-            <button ion-button color="dark" clear icon-start style="text-transform: none" (click)="setApresentadorSubst(trabalho)">
-              <ion-icon color="danger" [name]="trabalho.apresentadorSubstituto ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
-              Apresentador substituto
-            </button>
-            </p>
           </ion-card-content>
       </ion-card>
     </ng-container>

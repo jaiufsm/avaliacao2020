@@ -19,10 +19,18 @@
 <ion-content padding>
   <ion-slides (ionSlideDidChange)="slideChanged()">
     <ion-slide>
-      <h3>{{trabalho.titulo}}</h3>
-      <p>Apresentador: {{trabalho.apresentador}}</p>
-      <p>Evento: {{trabalho.evento}}</p>
-      <p>Data: {{trabalho.dia}} - {{trabalho.horario}}</p>
+      <h3 text-wrap>{{trabalho.titulo}}</h3>
+      <p text-wrap>Apresentador: {{trabalho.apresentador}}</p>
+      <p text-wrap>Evento: {{trabalho.evento}}</p>
+      <p text-wrap>Data: {{trabalho.dia}} - {{trabalho.horario}}</p>
+      <button ion-button color="dark" clear icon-start style="text-transform: none" (click)="setApresentadorAusente()">
+        <ion-icon color="danger" [name]="avaliacao.apresentadorAusente ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+        Apresentador ausente
+      </button>
+      <button ion-button color="dark" clear icon-start style="text-transform: none" (click)="setApresentadorSubst()">
+        <ion-icon color="danger" [name]="avaliacao.apresentadorSubstituto ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+        Apresentador substituto
+      </button>
     </ion-slide>
     <ion-slide *ngFor="let question of questions; let i = index">
       <h3>{{question.nome}}</h3>

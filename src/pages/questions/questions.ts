@@ -54,7 +54,9 @@ export class QuestionsPage {
         tituloTrabalho: this.trabalho.titulo,
         avaliador: avaliador,
         estado: Estado["Não Avaliado"],
-        respostas: new Array<string>(this.questions.length)
+        respostas: new Array<string>(this.questions.length),
+        apresentadorAusente: false,
+        apresentadorSubstituto: ""
       };
       this.localDataProvider.getAvaliacao(this.avaliacao.trabalho).then(avaliacao => {
         if(avaliacao){
@@ -127,7 +129,7 @@ export class QuestionsPage {
   showPromptAlert(){
     let prompt = this.alertCtrl.create({
       title: "Avaliador",
-      message: "Confirme seu nome abaixo, substituindo-o se necessário",
+      message: "Confirme seu nome abaixo, substituindo-o se necessário.Ao confirmar, a avaliação será enviada.",
       inputs: [
         {
           name: 'nome',
@@ -164,6 +166,54 @@ export class QuestionsPage {
       ]
     });
     return prompt;
+  }i
+
+  setApresentadorAusente() {
+    if (this.avaliacao.apresentadorAusente)
+      this.avaliacao.apresentadorAusente = false;
+
+    else {
+      this.avaliacao.apresentadorAusente = true;
+
+      // apresentador ausente, então todas as respostas são vazias
+      for(let i = 0; i < this.avaliacao.respostas.length; i++)
+        this.avaliacao.respostas[i] = "";
+ 
+      let prompt = this.showPromptAlert();
+      prompt.present();
+    }
+  }
+
+  
+  setApresentadorSubst() {
+    const prompt = this.alertCtrl.create({
+      title: "Apresentador substituto",
+      message: "Insira o nome do apresentador substituto.",
+      inputs: [
+        {
+          name: "nome",
+          placeholder: "Nome",
+          value: this.avaliacao.apresentadorSubstituto
+        },
+      ],
+      buttons: [
+        {
+          text: "Cancelar",
+          handler: data => {
+            console.log("Atribuição cancelada");
+          }
+        },
+        {
+          text: "Confirmar",
+          handler: data => {
+            console.log("Atribuição confirmada");
+            this.avaliacao.apresentadorSubstituto = data.nome;
+            console.log(this.avaliacao.apresentadorSubstituto);
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 
   public slidesBack(){

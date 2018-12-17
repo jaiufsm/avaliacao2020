@@ -63,7 +63,9 @@ export class TrabalhosPage {
             tituloTrabalho: this.trabalhos[i].titulo,
             avaliador: this.nome,
             estado: Estado["Não Avaliado"],
-            respostas: new Array<string>(10)
+            respostas: new Array<string>(10),
+            apresentadorAusente: false,
+            apresentadorSubstituto: ""
           }
           avaliacoes.push(avaliacao);
         }
@@ -88,52 +90,6 @@ export class TrabalhosPage {
 
   goToQuestions(trabalho: Trabalho) {
     this.navCtrl.push(QuestionsPage, { trabalho: trabalho, avaliador: this.nome });
-  }
-
-  setApresentadorAusente(trabalho: Trabalho, i) {
-    // TODO: setar dados do trabalho para que as informações
-    // permaneçam ao sair e relogar
-    if (trabalho.apresentadorAusente) {
-        trabalho.apresentadorAusente = false;
-    } else trabalho.apresentadorAusente = true;
-
-    this.localDataProvider.setTrabalhos(this.trabalhos).then(()=>{
-        this.trabalhos[i] = trabalho;
-    });
-
-    console.log(this.trabalhos[i].apresentadorAusente);
-  }
-
-  setApresentadorSubst(trabalho: Trabalho) {
-    // TODO: setar dados do trabalho para que as informações
-    // permaneçam ao sair e relogar
-    const prompt = this.alertCtrl.create({
-      title: 'Número da matrícula',
-      message: "Insira o número da matrícula do apresentador substituto.",
-      inputs: [
-        {
-          name: 'matricula',
-          placeholder: 'Matrícula'
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          handler: data => {
-            console.log("Atribuição cancelada");
-          }
-        },
-        {
-          text: 'Ok',
-          handler: data => {
-            console.log("Atribuição ok")
-            trabalho.apresentadorSubstituto = data;
-            console.log(trabalho.apresentadorSubstituto);
-          }
-        }
-      ]
-    });
-    prompt.present();
   }
 
   doLogout(){

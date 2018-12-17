@@ -104,6 +104,9 @@ export class ApiUfsmProvider {
         formBody.append("entry.291279887", avaliacao.tituloTrabalho);
         formBody.append("entry.1952743550", avaliacao.avaliador);
         formBody.append("entry.1725844449", avaliacao.avaliadorReal);
+        // AJEITAR ISSO:
+        //formBody.append("entry.", avaliacao.apresentadorSubstituto);
+
         //respostas
         /*
         formBody += "entry.931167567=" + respostas[0]

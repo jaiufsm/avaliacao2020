@@ -4,7 +4,9 @@ export interface Avaliacao{
     avaliador: string,
     avaliadorReal?:string,
     respostas: Array<string>,
-    estado: Estado
+    estado: Estado,
+    apresentadorAusente: boolean,
+    apresentadorSubstituto: string
 }
 
 export enum Estado{
