@@ -88,66 +88,55 @@ export class ApiUfsmProvider {
         console.log('online');
 
         /// Begin googleForms test
-        let formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfc1V0zMpY4E49ZfPT6g7ok0oZ707fAZH_V9VgCjqLbuyvAjg/formResponse";
+        let formUrl = "https://script.google.com/macros/s/AKfycbzdEAUndj-OtgytCTu59HZn2xOefjB9kOTEHjTDms6UQ8hpLX0/exec";
         let respostas = avaliacao.respostas;
-        let formBody = new FormData();
-        formBody.append("entry.931167567", respostas[0]);
-        formBody.append("entry.1091362213", respostas[1]);
-        formBody.append("entry.459559554", respostas[2]);
-        formBody.append("entry.1977341862", respostas[3]);
-        formBody.append("entry.673029848", respostas[4]);
-        formBody.append("entry.1465874438", respostas[5]);
-        formBody.append("entry.1043619085", respostas[6]);
-        formBody.append("entry.667784152", respostas[7]);
-        formBody.append("entry.339752743", respostas[8]);
-        formBody.append("entry.1977078333", respostas[9]);
-        formBody.append("entry.291279887", avaliacao.tituloTrabalho);
-        formBody.append("entry.1952743550", avaliacao.avaliador);
-        formBody.append("entry.1725844449", avaliacao.avaliadorReal);
-        // AJEITAR ISSO:
-        //formBody.append("entry.", avaliacao.apresentadorSubstituto);
-
-        //respostas
-        /*
-        formBody += "entry.931167567=" + respostas[0]
-          + "&entry.1091362213=" +  respostas[1]
-          + "&entry.459559554=" + respostas[2]
-          + "&entry.1977341862=" + respostas[3]
-          + "&entry.673029848=" + respostas[4]
-          + "&entry.1465874438=" + respostas[5]
-          + "&entry.1043619085=" + respostas[6]
-          + "&entry.667784152=" + respostas[7]
-          + "&entry.339752743=" + respostas[8]
-          + "&entry.1977078333=" + respostas[9]
-          + "&entry.291279887=" + avaliacao.tituloTrabalho
-          + "&entry.1952743550=" + avaliacao.avaliador
-          + "&entry.1725844449=" + avaliacao.avaliadorReal;
-        */
-/*
-        let formBody = {
-          "entry.931167567":"testecomtypescript",
-          "entry.1091362213":"testando",
-          "entry.459559554":"C",
-          "entry.1977341862":"D",
-          "entry.673029848":"E",
-          "entry.1465874438":"A",
-          "entry.1043619085":"B",
-          "entry.667784152":"3",
-          "entry.339752743":"4",
-          "entry.1977078333":"5",
-          "entry.291279887":"trab",
-          "entry.1952743550":"aval",
-          "entry.1725844449":"eu"
+        let formBody = new URLSearchParams();
+        let questoes = {
+          q1: respostas[0],
+          q2: respostas[1],
+          q3: respostas[2],
+          q4: respostas[3],
+          q5: respostas[4],
+          q6: respostas[5],
+          q7: respostas[6],
+          q8: respostas[7],
+          q9: respostas[8],
+          q10: respostas[9],
         };
-*/
-       // let formBody="entry.931167567=A&entry.1091362213=B&entry.459559554=C&entry.1977341862=D&entry.673029848=E&entry.1465874438=A&entry.1043619085=B&entry.667784152=3&entry.339752743=4&entry.1977078333=5&entry.291279887=trab&entry.1952743550=aval&entry.1725844449=eu"
-        /*let headers = new HttpHeaders({
-          'Content-Type': 'application/x-www-form-urlencoded'});
-        
-        let options = { headers: headers };*/
-        let postOnGoogleForms = this.http.post(formUrl, formBody);
+        formBody.append("idTrabalho", String(avaliacao.trabalho));
+        formBody.append("nomeTrabalho", avaliacao.tituloTrabalho);
+        formBody.append("avaliadorOriginal", avaliacao.avaliador);
+        formBody.append("avaliadorReal", avaliacao.avaliadorReal);
+        formBody.append("questoes", JSON.stringify(questoes));
+        formBody.append("type", "setAvaliacao");
 
-        postOnGoogleForms.subscribe((response: googleResponse) => {
+    
+        //let postOnGoogleForms = this.http.post(formUrl, formBody);
+
+        fetch('https://script.google.com/macros/s/AKfycbzdEAUndj-OtgytCTu59HZn2xOefjB9kOTEHjTDms6UQ8hpLX0/exec', { method: 'POST', redirect: 'follow', mode: 'no-cors', body: formBody })
+          .then(response => {
+            response.json().then(jsonResponse => console.log(jsonResponse.values));
+          }, err => {
+            console.log(err);
+          if(err.statusText == "Unknown Error"){
+            avaliacao.estado = Estado["Avaliado e Enviado"];
+            this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
+              console.log('success');
+              resolve();
+            }, err => {
+              console.log('erro');
+              console.log(err);
+            });
+          }else{
+            console.log("Erro: Tente novamente mais tarde");
+            avaliacao.estado = Estado["Avaliado mas não enviado"];
+            this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
+              reject();
+            });
+          }
+          });
+
+        /*postOnGoogleForms.subscribe((response: googleResponse) => {
           if(response.success){
             console.log('postOnGoogleForms')
           }else{
@@ -173,7 +162,7 @@ export class ApiUfsmProvider {
             });
           }
       
-        }); 
+        }); */
         /// End GoogleForms test
         
       }else{
