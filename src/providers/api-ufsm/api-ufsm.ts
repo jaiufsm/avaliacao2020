@@ -125,8 +125,20 @@ export class ApiUfsmProvider {
 
         fetch('https://script.google.com/macros/s/AKfycbzdEAUndj-OtgytCTu59HZn2xOefjB9kOTEHjTDms6UQ8hpLX0/exec', 
         { method: 'POST', redirect: 'follow', body: formBody })
-          .then(response => {
-            response.json().then(jsonResponse => console.log(jsonResponse));
+          .then((response:any) => {
+            response.json().then(jsonResponse => {
+              if(response.success){
+                avaliacao.estado = Estado["Avaliado e Enviado"];
+                this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
+                  console.log('success');
+                  resolve();
+                }, err => {
+                  console.log('erro');
+                  console.log(err);
+                });
+              }
+            });
+          
           }, err => {
             console.log(err);
           if(err.statusText == "Unknown Error"){
