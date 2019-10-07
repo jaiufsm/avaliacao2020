@@ -127,7 +127,7 @@ export class ApiUfsmProvider {
         { method: 'POST', redirect: 'follow', body: formBody })
           .then((response:any) => {
             response.json().then(jsonResponse => {
-              if(response.success){
+              if(jsonResponse.success){
                 avaliacao.estado = Estado["Avaliado e Enviado"];
                 this.localDataProvider.setAvaliacao(avaliacao.trabalho, avaliacao).then(()=>{
                   console.log('success');
