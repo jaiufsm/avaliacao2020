@@ -31,7 +31,7 @@
               <h3 text-wrap *ngIf="trabalho.sala">Oral - {{trabalho.predio}} - Sala {{trabalho.sala}}</h3>
               <h3 text-wrap *ngIf="trabalho.painel">{{trabalho.predio}} - Painel {{trabalho.painel}}</h3>
               <p *ngIf="estados && 'Não Avaliado' === estados[trabalho.id]" style="color:red">{{estados[trabalho.id]}}</p>
-              <p *ngIf="estados && 'Avaliado mas não enviado' === estados[trabalho.id]" style="color:yellow">{{estados[trabalho.id]}}</p>
+              <p *ngIf="estados && 'Avaliado mas não enviado' === estados[trabalho.id]" style="color:rgb(202, 202, 37)">{{estados[trabalho.id]}}</p>
               <p *ngIf="estados && 'Avaliado e Enviado' === estados[trabalho.id]" style="color:green">{{estados[trabalho.id]}}</p>
             </button>
           </ion-card-content>

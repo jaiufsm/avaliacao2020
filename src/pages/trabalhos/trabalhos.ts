@@ -65,7 +65,9 @@ export class TrabalhosPage {
             estado: Estado["Não Avaliado"],
             respostas: new Array<string>(10),
             apresentadorAusente: false,
-            apresentadorSubstituto: ""
+            posterAusente: false,
+            apresentadorSubstituto: "",
+            tipo: 'pendente'
           }
           avaliacoes.push(avaliacao);
         }

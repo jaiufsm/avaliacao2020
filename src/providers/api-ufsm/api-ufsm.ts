@@ -1,4 +1,3 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Trabalho } from '../../interfaces/trabalho';
 import { Avaliacao, Estado } from '../../interfaces/avaliacao';
@@ -20,7 +19,7 @@ export class ApiUfsmProvider {
   //private readonly headers: HttpHeaders;
   private trabalhosObs: BehaviorSubject<Array<Trabalho>>;
 
-  constructor(public http: HttpClient, public localDataProvider: LocalDataProvider) {
+  constructor(public localDataProvider: LocalDataProvider) {
     console.log('Hello ApiUfsmProvider Provider');
     this.url = "https://raw.githubusercontent.com/Felipe-Marin/pwa-jai-ufsm/master/api.json";
     /*let token = "";
@@ -91,7 +90,7 @@ export class ApiUfsmProvider {
         let formUrl = "https://script.google.com/macros/s/AKfycbzdEAUndj-OtgytCTu59HZn2xOefjB9kOTEHjTDms6UQ8hpLX0/exec";
         let respostas = avaliacao.respostas;
         let formBody = new URLSearchParams();
-        let questoes = {
+        /*let questoes = {
           q1: respostas[0],
           q2: respostas[1],
           q3: respostas[2],
@@ -102,20 +101,32 @@ export class ApiUfsmProvider {
           q8: respostas[7],
           q9: respostas[8],
           q10: respostas[9],
-        };
+        };*/
+        formBody.append("q1", respostas[0]);
+        formBody.append("q2", respostas[1]);
+        formBody.append("q3", respostas[2]);
+        formBody.append("q4", respostas[3]);
+        formBody.append("q5", respostas[4]);
+        formBody.append("q6", respostas[5]);
+        formBody.append("q7", respostas[6]);
+        formBody.append("q8", respostas[7]);
+        formBody.append("q9", respostas[8]);
+        formBody.append("q10", respostas[9]);
         formBody.append("idTrabalho", String(avaliacao.trabalho));
         formBody.append("nomeTrabalho", avaliacao.tituloTrabalho);
         formBody.append("avaliadorOriginal", avaliacao.avaliador);
         formBody.append("avaliadorReal", avaliacao.avaliadorReal);
-        formBody.append("questoes", JSON.stringify(questoes));
+        //formBody.append("questoes", JSON.stringify(questoes));
+        formBody.append("estado", avaliacao.tipo);
         formBody.append("type", "setAvaliacao");
 
     
         //let postOnGoogleForms = this.http.post(formUrl, formBody);
 
-        fetch('https://script.google.com/macros/s/AKfycbzdEAUndj-OtgytCTu59HZn2xOefjB9kOTEHjTDms6UQ8hpLX0/exec', { method: 'POST', redirect: 'follow', mode: 'no-cors', body: formBody })
+        fetch('https://script.google.com/macros/s/AKfycbzdEAUndj-OtgytCTu59HZn2xOefjB9kOTEHjTDms6UQ8hpLX0/exec', 
+        { method: 'POST', redirect: 'follow', body: formBody })
           .then(response => {
-            response.json().then(jsonResponse => console.log(jsonResponse.values));
+            response.json().then(jsonResponse => console.log(jsonResponse));
           }, err => {
             console.log(err);
           if(err.statusText == "Unknown Error"){

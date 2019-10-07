@@ -6,7 +6,9 @@ export interface Avaliacao{
     respostas: Array<string>,
     estado: Estado,
     apresentadorAusente: boolean,
-    apresentadorSubstituto: string
+    posterAusente: boolean,
+    apresentadorSubstituto: string,
+    tipo: string
 }
 
 export enum Estado{

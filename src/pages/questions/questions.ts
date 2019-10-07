@@ -56,7 +56,9 @@ export class QuestionsPage {
         estado: Estado["Não Avaliado"],
         respostas: new Array<string>(this.questions.length),
         apresentadorAusente: false,
-        apresentadorSubstituto: ""
+        posterAusente: false,
+        apresentadorSubstituto: "",
+        tipo: "pendente"
       };
       this.localDataProvider.getAvaliacao(this.avaliacao.trabalho).then(avaliacao => {
         if(avaliacao){
@@ -100,6 +102,7 @@ export class QuestionsPage {
       }
     }
     if(respostasPendentes == 0){
+      this.avaliacao.tipo = 'avaliado';
       let prompt = this.showPromptAlert();
       prompt.present();
     }else{
@@ -178,7 +181,25 @@ export class QuestionsPage {
       // apresentador ausente, então todas as respostas são vazias
       for(let i = 0; i < this.avaliacao.respostas.length; i++)
         this.avaliacao.respostas[i] = "";
+      
+      this.avaliacao.tipo = 'apresentador ausente';
+      let prompt = this.showPromptAlert();
+      prompt.present();
+    }
+  }
+
+  setPosterAusente() {
+    if (this.avaliacao.posterAusente)
+      this.avaliacao.posterAusente = false;
+
+    else {
+      this.avaliacao.posterAusente = true;
+
+      // poster ausente, então todas as respostas são vazias
+      for(let i = 0; i < this.avaliacao.respostas.length; i++)
+        this.avaliacao.respostas[i] = "";
  
+        this.avaliacao.tipo = 'poster ausente';
       let prompt = this.showPromptAlert();
       prompt.present();
     }

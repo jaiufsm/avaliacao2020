@@ -27,6 +27,10 @@
         <ion-icon color="danger" [name]="avaliacao.apresentadorAusente ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
         Apresentador ausente
       </button>
+      <button ion-button color="dark" clear icon-start style="text-transform: none" (click)="setPosterAusente()">
+        <ion-icon color="danger" [name]="avaliacao.posterAusente ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+        Poster ausente
+      </button>
       <button ion-button color="dark" clear icon-start style="text-transform: none" (click)="setApresentadorSubst()">
         <ion-icon color="danger" [name]="avaliacao.apresentadorSubstituto ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
         Apresentador substituto
