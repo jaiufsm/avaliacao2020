@@ -32,33 +32,50 @@ export class LoginPage {
       duration: 30000
     });
     loader.present();
-    let url = "https://jai-ufsm2.herokuapp.com/jai/avaliacaoRest/login";
-    //let url = "http://127.0.0.1:5000/jai/avaliacaoRest/login";
-    let body = {
-      "login": this.login,
-      "password": this.password
-    };
-    let postLogin = this.http.post(url, body);
-    postLogin.subscribe((response: loginResponse) => {
-      if(response.success){
-        loader.dismiss().catch(() => {});
-        let data = {nome: response.nome, trabalhos: response.trabalhos};
-        this.navCtrl.setRoot(TrabalhosPage, data);
-      }else{
-        loader.dismiss().catch(() => {});
-        this.showAlert("Erro ao entrar", response.erro);
-      }
-    }, err => {
-      console.log(err);
-      if(!navigator.onLine){
-        loader.dismiss().catch(() => {});
-        this.showAlert("Erro ao entrar", "Não há conexão com a internet");
-      }else{
-        loader.dismiss().catch(() => {});
-        this.showAlert("Erro ao entrar", "Tente novamente mais tarde");
-      }
-      
-    });
+    let body = new URLSearchParams();
+    body.append('login', this.login);
+    body.append('password', this.password);
+    body.append('type', 'doLoginAvaliador');
+    fetch('https://script.google.com/macros/s/AKfycbzdEAUndj-OtgytCTu59HZn2xOefjB9kOTEHjTDms6UQ8hpLX0/exec', 
+    { method: 'POST', redirect: 'follow', body: body })
+      .then((response:any) => {
+        response.json().then(jsonResponse => {
+          if(jsonResponse.success) {
+            let nome = jsonResponse.trabalhos[0][0];
+            let trabalhos = [];
+            for(let trabalho of jsonResponse.trabalhos) {
+              trabalhos.push({
+                id: trabalho[2],
+                titulo: trabalho[3],
+                apresentador: trabalho[4],
+                evento: trabalho[6],
+                dia: trabalho[7],
+                horario: trabalho[8],
+                predio: trabalho[9],
+                sala: trabalho[10],
+                painel: trabalho[11],
+                tipo_form: trabalho[14]
+              });
+            }
+            let data = {nome: nome, trabalhos: trabalhos};
+            loader.dismiss().catch(() => {});
+            this.navCtrl.setRoot(TrabalhosPage, data);
+          } else {
+            loader.dismiss().catch(() => {});
+            this.showAlert("Erro ao entrar", jsonResponse.message);
+          }
+        
+        });
+      },  err => {
+        console.log(err);
+        if(!navigator.onLine){
+          loader.dismiss().catch(() => {});
+          this.showAlert("Erro ao entrar", "Não há conexão com a internet");
+        }else{
+          loader.dismiss().catch(() => {});
+          this.showAlert("Erro ao entrar", "Tente novamente mais tarde");
+        }
+      });
   }
 
   showAlert(title: string, subtitle: string) {
@@ -70,11 +87,4 @@ export class LoginPage {
     alert.present();
   }
 
-}
-
-interface loginResponse{
-  'success': boolean,
-  'trabalhos'?: Array<any>,
-  'nome'?: string,
-  'erro'?: string
 }

@@ -41,7 +41,7 @@ export class QuestionsPage {
     if(this.navParams.data.trabalho){
       this.trabalho = this.navParams.data.trabalho;
       let avaliador = this.navParams.data.avaliador;
-      if(this.trabalho.evento.includes('Fórum Extensão Conta')){
+      if(this.trabalho.tipo_form.includes('ext')){
         this.questions = Perguntas.perguntasExt;
       }else{
         this.questions = Perguntas.perguntasIC;
@@ -102,7 +102,7 @@ export class QuestionsPage {
       }
     }
     if(respostasPendentes == 0){
-      this.avaliacao.tipo = 'avaliado';
+      this.avaliacao.tipo = 'av';
       let prompt = this.showPromptAlert();
       prompt.present();
     }else{
@@ -182,7 +182,7 @@ export class QuestionsPage {
       for(let i = 0; i < this.avaliacao.respostas.length; i++)
         this.avaliacao.respostas[i] = "";
       
-      this.avaliacao.tipo = 'apresentador ausente';
+      this.avaliacao.tipo = 'aa';
       let prompt = this.showPromptAlert();
       prompt.present();
     }
@@ -199,7 +199,7 @@ export class QuestionsPage {
       for(let i = 0; i < this.avaliacao.respostas.length; i++)
         this.avaliacao.respostas[i] = "";
  
-        this.avaliacao.tipo = 'poster ausente';
+        this.avaliacao.tipo = 'pa';
       let prompt = this.showPromptAlert();
       prompt.present();
     }
