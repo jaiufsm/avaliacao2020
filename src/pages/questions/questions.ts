@@ -97,7 +97,7 @@ export class QuestionsPage {
     console.log('setavaliacao');
     let respostasPendentes = 0;
     for(let i = 0; i < this.avaliacao.respostas.length; i++){
-      if(this.avaliacao.respostas[i] == undefined){
+      if(this.avaliacao.respostas[i] == undefined || this.avaliacao.respostas[i] == ""){
         respostasPendentes += 1;
       }
     }
