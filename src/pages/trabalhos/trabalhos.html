@@ -27,7 +27,7 @@
             <button ion-item (click)="goToQuestions(trabalho)">
               <h2 text-wrap>{{trabalho.titulo}}</h2>
               <h3 text-wrap>{{trabalho.apresentador}}</h3>
-              <h3 text-wrap *ngIf="trabalho.dia && trabalho.horario">{{trabalho.dia}} - {{trabalho.horario}}</h3>
+              <h3 text-wrap *ngIf="trabalho.dia && trabalho.horario" style="font-weight: bold">{{trabalho.dia}} - {{trabalho.horario}}</h3>
               <h3 text-wrap *ngIf="trabalho.sala">Oral - {{trabalho.predio}} - Sala {{trabalho.sala}}</h3>
               <h3 text-wrap *ngIf="trabalho.painel">{{trabalho.predio}} - Painel {{trabalho.painel}}</h3>
               <p *ngIf="estados && 'Não Avaliado' === estados[trabalho.id]" style="color:red">{{estados[trabalho.id]}}</p>
