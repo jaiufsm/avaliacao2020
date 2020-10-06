@@ -87,7 +87,7 @@ export class ApiUfsmProvider {
         console.log('online');
 
         /// Begin googleForms test
-        let formUrl = "https://script.google.com/macros/s/AKfycbzdEAUndj-OtgytCTu59HZn2xOefjB9kOTEHjTDms6UQ8hpLX0/exec";
+        let formUrl = "https://script.google.com/macros/s/AKfycbyk7ohDB0YxOmRIxWL3msAARpwaL2bJ4F3YFzLzmB_5ybO3Pc1X/exec";
         let respostas = avaliacao.respostas;
         let formBody = new URLSearchParams();
         formBody.append("q1", respostas[0]);
