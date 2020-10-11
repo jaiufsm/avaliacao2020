@@ -36,7 +36,7 @@ export class LoginPage {
     body.append('login', this.login);
     body.append('password', this.password);
     body.append('type', 'doLoginAvaliador');
-    fetch('https://script.google.com/macros/s/AKfycbzdEAUndj-OtgytCTu59HZn2xOefjB9kOTEHjTDms6UQ8hpLX0/exec', 
+    fetch('https://script.google.com/macros/s/AKfycbyk7ohDB0YxOmRIxWL3msAARpwaL2bJ4F3YFzLzmB_5ybO3Pc1X/exec', 
     { method: 'POST', redirect: 'follow', body: body })
       .then((response:any) => {
         response.json().then(jsonResponse => {
