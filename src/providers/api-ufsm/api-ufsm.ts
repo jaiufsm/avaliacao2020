@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Trabalho } from '../../interfaces/trabalho';
+//import { Trabalho } from '../../interfaces/trabalho';
 import { Avaliacao, Estado } from '../../interfaces/avaliacao';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+//import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { LocalDataProvider } from '../local-data/local-data';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 
@@ -15,20 +15,18 @@ import { fromEvent } from 'rxjs/observable/fromEvent';
 export class ApiUfsmProvider {
 
   //private trabalhos: Array<Trabalho>;
-  private readonly url: string;
   //private readonly headers: HttpHeaders;
-  private trabalhosObs: BehaviorSubject<Array<Trabalho>>;
+  //private trabalhosObs: BehaviorSubject<Array<Trabalho>>;
 
   constructor(public localDataProvider: LocalDataProvider) {
     console.log('Hello ApiUfsmProvider Provider');
-    this.url = "https://raw.githubusercontent.com/Felipe-Marin/pwa-jai-ufsm/master/api.json";
     /*let token = "";
     let deviceID = "";
     this.headers = new HttpHeaders({
       'X-UFSM-Access-Token': token,
       'X-UFSM-Device-ID': deviceID
     });*/
-    this.trabalhosObs = new BehaviorSubject([]);
+    //this.trabalhosObs = new BehaviorSubject([]);
     fromEvent(window, 'online').subscribe(()=>{
       this.sendAvaliacoes();
     });
@@ -74,11 +72,11 @@ export class ApiUfsmProvider {
     return this.trabalhosObs;
   }*/
 
-  private getTrabalhosLocal(){
+  /*private getTrabalhosLocal(){
     this.localDataProvider.getTrabalhos().then(trabalhos => {
       this.trabalhosObs.next(trabalhos);
     });
-  }
+  }*/
 
   public setAvaliacao(avaliacao: Avaliacao){
     console.log('setavaliacao');
@@ -106,6 +104,7 @@ export class ApiUfsmProvider {
         formBody.append("avaliadorReal", avaliacao.avaliadorReal);
         //formBody.append("questoes", JSON.stringify(questoes));
         formBody.append("estado", avaliacao.tipo);
+        formBody.append("apresentadorSubstituto", avaliacao.apresentadorSubstituto);
         formBody.append("type", "setAvaliacao");
 
     

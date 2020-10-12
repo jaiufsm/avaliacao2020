@@ -199,7 +199,7 @@ export class QuestionsPage {
       for(let i = 0; i < this.avaliacao.respostas.length; i++)
         this.avaliacao.respostas[i] = "";
  
-        this.avaliacao.tipo = 'pa';
+        this.avaliacao.tipo = 'pt';
       let prompt = this.showPromptAlert();
       prompt.present();
     }
